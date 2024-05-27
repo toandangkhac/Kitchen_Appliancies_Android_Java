@@ -40,5 +40,12 @@ public class SignUpFragment extends Fragment {
 
             }
         });
+        binding.signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle sign up button click
+                findNavController(SignUpFragment.this).navigate(R.id.action_signUpFragment_to_verifyOtpFragment);
+            }
+        });
     }
 }

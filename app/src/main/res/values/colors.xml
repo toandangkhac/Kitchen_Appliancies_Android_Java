@@ -6,4 +6,8 @@
     <color name="colorPrimaryDark">#FFFFFF</color>
     <color name="colorAccent">#FFFFFF</color>
     <color name="textInputLayout">#96ffffff</color>
+
+    <color name="text_bottom_nav_color">#FFEB3B</color>
+    <color name="bottom_nav_color">#2196F3</color>
+    <color name="background_bottom">#FFFFFF</color>
 </resources>
