@@ -23,5 +23,13 @@
         <action
             android:id="@+id/action_signUpFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_signUpFragment_to_verifyOtpFragment"
+            app:destination="@id/verifyOtpFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/verifyOtpFragment"
+        android:name="com.example.kitchen_appliances_android_java.fragment.VerifyOtpFragment"
+        android:label="fragment_verify_otp"
+        tools:layout="@layout/fragment_verify_otp" />
 </navigation>
