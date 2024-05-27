@@ -10,11 +10,6 @@ import android.view.ViewGroup;
 
 import com.example.kitchen_appliances_android_java.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link VerifyOtpFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class VerifyOtpFragment extends Fragment {
 
 
@@ -23,15 +18,6 @@ public class VerifyOtpFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment VerifyOtpFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static VerifyOtpFragment newInstance(String param1, String param2) {
         VerifyOtpFragment fragment = new VerifyOtpFragment();
         Bundle args = new Bundle();
