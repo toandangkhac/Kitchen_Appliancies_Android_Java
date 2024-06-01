@@ -5,11 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Đây là trang home"
-        android:textSize="30dp"/>
+    <Button
+        android:id="@+id/btnTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pokemon"
+        android:layout_gravity="center"
+        android:onClick="goToPokemon" />
 
 
 </FrameLayout>
