@@ -8,17 +8,17 @@
 
     <item
         android:id="@+id/navigation_cart"
-        android:icon="@drawable/home_24px"
+        android:icon="@drawable/cart_icon"
         android:title="Giỏ hàng" />
 
     <item
         android:id="@+id/navigation_history"
-        android:icon="@drawable/home_24px"
+        android:icon="@drawable/history_icon"
         android:title="Lịch sử" />
 
     <item
         android:id="@+id/navigation_account"
-        android:icon="@drawable/home_24px"
+        android:icon="@drawable/account_icon"
         android:title="Tài khoản" />
 
 </menu>
