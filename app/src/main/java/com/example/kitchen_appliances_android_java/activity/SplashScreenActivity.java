@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -90,26 +91,23 @@ public class SplashScreenActivity extends AppCompatActivity {
                     params.put("email", email);
                     params.put("password", password);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
+                    Log.e("SplashScreenActivity", "Error creating JSON params", e);
+                    return;
                 }
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                        (Request.Method.POST, url, params, new Response.Listener<JSONObject>() {
+                        (Request.Method.POST, url, params, response -> {
+//                                Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+//                                startActivity(intent);
+                            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+                            finish();
 
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                finish();
-
-                            }
-                        }, new Response.ErrorListener() {
-
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Intent intent = new Intent(SplashScreenActivity.this, LoginSignUpActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
+                        }, error ->  {
+                            Log.e("SplashScreenActivity", "Login Error", error);
+//                            Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+//                            startActivity(intent);
+                            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+                            finish();
                         });
 
 

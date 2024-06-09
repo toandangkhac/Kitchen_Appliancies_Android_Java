@@ -7,22 +7,22 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.kitchen_appliances_android_java.HomeFragment"
+        android:name="com.example.kitchen_appliances_android_java.fragment.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/cartFragment"
-        android:name="com.example.kitchen_appliances_android_java.CartFragment"
+        android:name="com.example.kitchen_appliances_android_java.fragment.CartFragment"
         android:label="fragment_cart"
         tools:layout="@layout/fragment_cart" />
     <fragment
         android:id="@+id/accountFragment"
-        android:name="com.example.kitchen_appliances_android_java.AccountFragment"
+        android:name="com.example.kitchen_appliances_android_java.fragment.AccountFragment"
         android:label="fragment_account"
         tools:layout="@layout/fragment_account" />
     <fragment
         android:id="@+id/historyFragment"
-        android:name="com.example.kitchen_appliances_android_java.HistoryFragment"
+        android:name="com.example.kitchen_appliances_android_java.fragment.HistoryFragment"
         android:label="fragment_history"
         tools:layout="@layout/fragment_history" />
 </navigation>
