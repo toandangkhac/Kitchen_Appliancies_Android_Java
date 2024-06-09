@@ -49,5 +49,6 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation ("com.google.code.gson:gson:2.11.0")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
+    implementation ("com.auth0:java-jwt:4.2.1")
 
 }

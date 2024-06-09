@@ -81,8 +81,10 @@ public class SplashScreenActivity extends AppCompatActivity {
                 String url = "https://10.0.2.2:7161/api/Account/login";
                 // Check login status
                 SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
-                String email = sharedPreferences.getString("email", "");
-                String password = sharedPreferences.getString("password", "");
+//                String email = sharedPreferences.getString("email", "");
+//                String password = sharedPreferences.getString("password", "");
+                String email = "";
+                String password = "";
                 JSONObject params = new JSONObject();
                 try {
                     params.put("email", email);

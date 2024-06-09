@@ -112,7 +112,7 @@ public class HomeFragment extends Fragment {
 
     private void loadCategories() {
         RequestQueue queue = Volley.newRequestQueue(getContext(), hurlStack);
-        String url = "https://10.0.2.2:7161/api/Category";
+        String url = "https://10.0.2.2:7178/gateway/category";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
                     Gson gson = new Gson();
@@ -130,7 +130,7 @@ public class HomeFragment extends Fragment {
 
     private void loadProducts() {
         RequestQueue queue = Volley.newRequestQueue(getContext(), hurlStack);
-        String url = "https://10.0.2.2:7161/api/Product";
+        String url = "https://10.0.2.2:7178/gateway/product";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
                     Gson gson = new Gson();

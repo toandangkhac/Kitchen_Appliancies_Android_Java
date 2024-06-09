@@ -48,6 +48,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.kitchen_appliances_android_java.model.Category;
 import com.example.kitchen_appliances_android_java.model.Token;
 import com.example.kitchen_appliances_android_java.model.TokenResponse;
+import com.example.kitchen_appliances_android_java.util.JwtDecoder;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -106,7 +107,9 @@ public class LoginFragment extends Fragment {
             @Override
 
             public void onClick(View v) {
-                String url = "https://10.0.2.2:7161/api/Account/login";
+                String url = "https://10.0.2.2:7178/gateway/account/login";
+
+//                String url = "https://10.0.2.2:7161/api/Account/login";
                 String email = binding.edtEmail.getText().toString();
                 String password = binding.edtPassword.getText().toString();
                 JSONObject params = new JSONObject();
@@ -124,22 +127,26 @@ public class LoginFragment extends Fragment {
                             public void onResponse(JSONObject response) {
                                 // Handle response
                                 Gson gson = new Gson();
-                                TokenResponse tokenResponse = gson.fromJson(response.toString(), TokenResponse.class);
+                                Token tokenResponse = gson.fromJson(response.toString(), Token.class);
 
                                 // Get the Data object from the TokenResponse
-                                Token data = tokenResponse.getData();
+//                                Token data = tokenResponse.getData();
                                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MySharedPref", MODE_PRIVATE);
                                 SharedPreferences.Editor myEdit = sharedPreferences.edit();
                                 myEdit.putString("email", email);
                                 myEdit.putString("password", password);
                                 // Đăng xuất phải remove email, password, token.
-                                myEdit.putString("accessToken", data.getAccessToken());
-                                myEdit.putString("refreshToken", data.getRefreshToken());
+//                                myEdit.putString("accessToken", data.getAccessToken());
+//                                myEdit.putString("refreshToken", data.getRefreshToken());
                                 myEdit.commit();
+
+
+                                String decodeString = JwtDecoder.getInstance().decodeToken(tokenResponse.getAccessToken());
+                                Toast.makeText(getContext(), "Login successful:"  , Toast.LENGTH_SHORT).show();
+                                Log.d("Login", "Login successful: " + decodeString);
                                 Intent intent = new Intent(getActivity(), MainActivity.class);
-                                startActivity(intent);
                                 getActivity().finish();
-                                Toast.makeText(getContext(), "Login successful", Toast.LENGTH_SHORT).show();
+                                startActivity(intent);
                             }
                         }, new Response.ErrorListener() {
 
