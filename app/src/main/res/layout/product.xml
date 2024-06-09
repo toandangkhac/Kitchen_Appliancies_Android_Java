@@ -11,6 +11,14 @@
         android:layout_marginBottom="8dp"
         android:src="@drawable/ic_launcher_background" />
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvProductName"
+        android:text="Product Name"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        android:layout_gravity="center" />
+    <TextView
         android:id="@+id/tvProductPrice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

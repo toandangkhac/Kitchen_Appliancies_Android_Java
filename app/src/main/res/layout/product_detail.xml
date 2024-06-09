@@ -8,10 +8,17 @@
         android:id="@+id/ivProductImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:src="@drawable/ic_launcher_background" />
 
     <TextView
         android:id="@+id/tvProductName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <TextView
+        android:id="@+id/tvProductPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -25,32 +32,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/tvProductPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-    <Button
-        android:id="@+id/btnDecreaseQuantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="-" />
+        <Button
+            android:id="@+id/btnDecreaseQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-" />
+
+        <TextView
+            android:id="@+id/tvQuantity"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="1" />
+
+        <Button
+            android:id="@+id/btnIncreaseQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+" />
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/tvQuantity"
-        android:layout_width="wrap_content"
+        android:id="@+id/tvTotal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="1" />
-
-    <Button
-        android:id="@+id/btnIncreaseQuantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="+" />
-    </LinearLayout>
+        android:text="Total:"
+        />
 
     <Button
         android:id="@+id/btnAddToCart"
