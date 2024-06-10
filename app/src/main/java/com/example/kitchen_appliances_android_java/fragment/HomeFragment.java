@@ -1,4 +1,4 @@
-package com.example.kitchen_appliances_android_java;
+package com.example.kitchen_appliances_android_java.fragment;
 
 import android.os.Bundle;
 
@@ -21,11 +21,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.kitchen_appliances_android_java.R;
 import com.example.kitchen_appliances_android_java.adapter.CategoryAdapter;
 import com.example.kitchen_appliances_android_java.adapter.ProductAdapter;
 import com.example.kitchen_appliances_android_java.api.TrustAllCertificatesSSLSocketFactory;
+import com.example.kitchen_appliances_android_java.model.ApiResponse;
 import com.example.kitchen_appliances_android_java.model.Category;
 import com.example.kitchen_appliances_android_java.model.Product;
+import com.example.kitchen_appliances_android_java.model.Token;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
@@ -112,17 +115,26 @@ public class HomeFragment extends Fragment {
 
     private void loadCategories() {
         RequestQueue queue = Volley.newRequestQueue(getContext(), hurlStack);
-        String url = "https://10.0.2.2:7178/gateway/category";
+        String url = "https://10.0.2.2:7161/api/Category";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
                     Gson gson = new Gson();
-                    Type categoryListType = new TypeToken<ArrayList<Category>>() {
-                    }.getType();
-                    ArrayList<Category> categories = gson.fromJson(response, categoryListType);
-                    updateCategoriesUI(categories);
+                    ApiResponse<ArrayList<Category>> apiResponse = gson.fromJson(response, new TypeToken<ApiResponse<ArrayList<Category>>>() {}.getType());
+                    if (apiResponse != null && apiResponse.getStatus() == 200) {
+                        ArrayList<Category> categories = apiResponse.getData();
+                        Toast.makeText(getContext(), "Categories loaded", Toast.LENGTH_SHORT).show();
+                        updateCategoriesUI(categories);
+                    } else {
+                        Toast.makeText(getContext(), "Error: Unable to fetch category data", Toast.LENGTH_SHORT).show();
+                    }
+//                    Type type = new TypeToken<ApiResponse<ArrayList<Category>>>() {}.getType();
+//                    ApiResponse<ArrayList<Category>> apiResponse = gson.fromJson(response.toString(), type);
+//                    ArrayList<Category> categories = apiResponse.getData();
+//                    Toast.makeText(getContext(), "Categories loaded", Toast.LENGTH_SHORT).show();
+//                    updateCategoriesUI(categories);
                 }, error -> {
             error.printStackTrace();
-            Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Error at category: " + error.getMessage(), Toast.LENGTH_SHORT).show();
         });
         queue.add(stringRequest);
     }
@@ -130,14 +142,21 @@ public class HomeFragment extends Fragment {
 
     private void loadProducts() {
         RequestQueue queue = Volley.newRequestQueue(getContext(), hurlStack);
-        String url = "https://10.0.2.2:7178/gateway/product";
+        String url = "https://10.0.2.2:7161/api/Product";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
                     Gson gson = new Gson();
-                    Type productListType = new TypeToken<ArrayList<Product>>() {
-                    }.getType();
-                    products = gson.fromJson(response, productListType);
-                    updateUI(products);
+//                    Type productListType = new TypeToken<ArrayList<Product>>() {
+//                    }.getType();
+//                    products = gson.fromJson(response, productListType);
+//                    updateUI(products);
+                    ApiResponse<ArrayList<Product>> apiResponse = gson.fromJson(response, new TypeToken<ApiResponse<ArrayList<Product>>>() {}.getType());
+                    if (apiResponse != null && apiResponse.getStatus() == 200) {
+                        products = apiResponse.getData();
+                        updateUI(products);
+                    } else {
+                        Toast.makeText(getContext(), "Error: Unable to fetch product data", Toast.LENGTH_SHORT).show();
+                    }
                 }, error -> {
             error.printStackTrace();
             Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -167,12 +186,17 @@ public class HomeFragment extends Fragment {
 
     private void filterProductsByCategory(int categoryId) {
         ArrayList<Product> filteredProducts = new ArrayList<>();
-        for (Product product : products) {
-            if (product.getCategoryId() == categoryId) {
-                filteredProducts.add(product);
+        if(products  == null){
+            Toast.makeText(getContext(), "Products are null", Toast.LENGTH_SHORT).show();
+        } else{
+            for (Product product : products) {
+                if (product.getCategoryId() == categoryId) {
+                    filteredProducts.add(product);
+                }
             }
+            updateUI(filteredProducts);
         }
-        updateUI(filteredProducts);
+
     }
 
     private void updateUI(ArrayList<Product> filteredProducts) {

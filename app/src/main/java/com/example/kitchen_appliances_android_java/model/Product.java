@@ -3,8 +3,12 @@ package com.example.kitchen_appliances_android_java.model;
 import java.io.Serializable;
 
 public class Product  implements Serializable {
+    private int id;
     private String name;
     private String description;
+    private boolean status;
+
+
     private int categoryId;
     private double price;
 
@@ -39,4 +43,21 @@ public class Product  implements Serializable {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
 }

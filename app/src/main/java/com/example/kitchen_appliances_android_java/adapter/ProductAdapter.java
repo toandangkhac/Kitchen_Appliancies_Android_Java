@@ -41,11 +41,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     }
 
     static class ProductViewHolder extends RecyclerView.ViewHolder {
-        TextView  tvProductPrice;
+        TextView  tvProductPrice, tvProductName;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             tvProductPrice = itemView.findViewById(R.id.tvProductPrice);
+            tvProductName = itemView.findViewById(R.id.tvProductName);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -62,6 +63,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         public void bind(Product product) {
             tvProductPrice.setText(String.valueOf(product.getPrice()));
+            tvProductName.setText(product.getName());
         }
     }
 }
