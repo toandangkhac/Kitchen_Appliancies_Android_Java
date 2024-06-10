@@ -84,8 +84,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
 //                String email = sharedPreferences.getString("email", "");
 //                String password = sharedPreferences.getString("password", "");
-                String email = "";
-                String password = "";
+                String email = "toandang1704@gmail.com";
+                String password = "123";
                 JSONObject params = new JSONObject();
                 try {
                     params.put("email", email);
