@@ -134,7 +134,7 @@ public class HomeFragment extends Fragment {
 //                    updateCategoriesUI(categories);
                 }, error -> {
             error.printStackTrace();
-//            Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Error at category: " + error.getMessage(), Toast.LENGTH_SHORT).show();
         });
         queue.add(stringRequest);
     }
