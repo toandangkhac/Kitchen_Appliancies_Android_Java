@@ -137,18 +137,18 @@ public class ProductDetail extends AppCompatActivity {
                         if (category != null) {
                             // Xử lý dữ liệu category
                             String categoryName = category.getName();
-                            Toast.makeText(this, "Category: " + categoryName, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(this, "Category: " + categoryName, Toast.LENGTH_SHORT).show();
                             tvProductCategory.setText("Loại: " + categoryName);
                         } else {
-                            Toast.makeText(this, "Error: Category data is null", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(this, "Error: Category data is null", Toast.LENGTH_SHORT).show();
                         }
                     }
                     else {
-                        Toast.makeText(this, "Error: Unable to fetch category data", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(this, "Error: Unable to fetch category data", Toast.LENGTH_SHORT).show();
                     }
                 }, error -> {
             error.printStackTrace();
-            Toast.makeText(this, "Error at category: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Error at category: " + error.getMessage(), Toast.LENGTH_SHORT).show();
         });
         queue.add(stringRequest);
     }
