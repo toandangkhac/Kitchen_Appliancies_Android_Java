@@ -29,14 +29,19 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.kitchen_appliances_android_java.R;
 import com.example.kitchen_appliances_android_java.api.TrustAllCertificatesSSLSocketFactory;
+import com.example.kitchen_appliances_android_java.model.ApiResponse;
 import com.example.kitchen_appliances_android_java.model.Token;
 import com.example.kitchen_appliances_android_java.model.TokenResponse;
+import com.example.kitchen_appliances_android_java.util.JwtDecoder;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -82,10 +87,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                 String url = "https://10.0.2.2:7161/api/Account/login";
                 // Check login status
                 SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
-//                String email = sharedPreferences.getString("email", "");
-//                String password = sharedPreferences.getString("password", "");
-                String email = "";
-                String password = "";
+                String email = sharedPreferences.getString("email", "");
+                String password = sharedPreferences.getString("password", "");
                 JSONObject params = new JSONObject();
                 try {
                     params.put("email", email);
@@ -99,6 +102,24 @@ public class SplashScreenActivity extends AppCompatActivity {
                         (Request.Method.POST, url, params, response -> {
 //                                Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
 //                                startActivity(intent);
+                            Gson gson = new Gson();
+                            Type responseType = new TypeToken<ApiResponse<Token>>(){}.getType();
+                            ApiResponse<Token> token = gson.fromJson(String.valueOf(response), responseType);
+
+                            String decodeString = JwtDecoder.getInstance().decodeToken(token.getData().getAccessToken());
+
+
+// ...
+
+                            if(decodeString.contains("Khách hàng")){
+                                Log.d("SplashScreenActivity", "Decoded token: " + "Khách hàng");
+                            } else if (decodeString.contains("Nhân viên")) {
+                                Log.d("SplashScreenActivity", "Decoded token: " + "Nhân viên");
+                            } else {
+                                Log.d("SplashScreenActivity", "Decoded token: " + "Admin");
+
+                            }
+                            Log.d("SplashScreenActivity", "Decoded token: " +decodeString);
                             startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
                             finish();
 
@@ -106,7 +127,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                             Log.e("SplashScreenActivity", "Login Error", error);
 //                            Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
 //                            startActivity(intent);
-                            startActivity(new Intent(SplashScreenActivity.this, AdminMainActivity.class));
+                            startActivity(new Intent(SplashScreenActivity.this, LoginSignUpActivity.class));
                             finish();
                         });
 

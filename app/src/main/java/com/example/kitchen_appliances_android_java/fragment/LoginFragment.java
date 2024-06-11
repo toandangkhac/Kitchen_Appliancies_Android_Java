@@ -24,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.example.kitchen_appliances_android_java.R;
 import com.example.kitchen_appliances_android_java.activity.MainActivity;
+import com.example.kitchen_appliances_android_java.activity.ProductDetail;
 import com.example.kitchen_appliances_android_java.api.TrustAllCertificatesSSLSocketFactory;
 import com.example.kitchen_appliances_android_java.databinding.FragmentLoginBinding;
 
@@ -45,11 +46,13 @@ import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.kitchen_appliances_android_java.model.ApiResponse;
 import com.example.kitchen_appliances_android_java.model.Category;
 import com.example.kitchen_appliances_android_java.model.Token;
 import com.example.kitchen_appliances_android_java.model.TokenResponse;
 import com.example.kitchen_appliances_android_java.util.JwtDecoder;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -127,7 +130,8 @@ public class LoginFragment extends Fragment {
                             public void onResponse(JSONObject response) {
                                 // Handle response
                                 Gson gson = new Gson();
-                                Token tokenResponse = gson.fromJson(response.toString(), Token.class);
+                                Type responseType = new TypeToken<ApiResponse<Token>>(){}.getType();
+                                ApiResponse<Token> tokenResponse = gson.fromJson(String.valueOf(response), responseType);
 
                                 // Get the Data object from the TokenResponse
 //                                Token data = tokenResponse.getData();
@@ -141,12 +145,28 @@ public class LoginFragment extends Fragment {
                                 myEdit.commit();
 
 
-                                String decodeString = JwtDecoder.getInstance().decodeToken(tokenResponse.getAccessToken());
+                                String decodeString = JwtDecoder.getInstance().decodeToken(tokenResponse.getData().getAccessToken());
+                                if(decodeString.contains("Khách hàng")){
+                                    Log.d("SplashScreenActivity", "Decoded token: " + "Khách hàng");
+                                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                                    getActivity().finish();
+                                    startActivity(intent);
+                                } else if (decodeString.contains("Quản trị viên")) {
+                                    Log.d("SplashScreenActivity", "Decoded token: " + "Quản trị viên");
+                                    Intent intent = new Intent(getActivity(), ProductDetail.class);
+                                    getActivity().finish();
+                                    startActivity(intent);
+                                } else {
+                                    Log.d("SplashScreenActivity", "Decoded token: " + "Nhân viên");
+                                    Intent intent = new Intent(getActivity(), ProductDetail.class);
+                                    getActivity().finish();
+                                    startActivity(intent);
+                                }
                                 Toast.makeText(getContext(), "Login successful:"  , Toast.LENGTH_SHORT).show();
                                 Log.d("Login", "Login successful: " + decodeString);
-                                Intent intent = new Intent(getActivity(), MainActivity.class);
-                                getActivity().finish();
-                                startActivity(intent);
+//                                Intent intent = new Intent(getActivity(), MainActivity.class);
+//                                getActivity().finish();
+//                                startActivity(intent);
                             }
                         }, new Response.ErrorListener() {
 
