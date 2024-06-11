@@ -106,7 +106,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                             Log.e("SplashScreenActivity", "Login Error", error);
 //                            Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
 //                            startActivity(intent);
-                            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+                            startActivity(new Intent(SplashScreenActivity.this, AdminMainActivity.class));
                             finish();
                         });
 

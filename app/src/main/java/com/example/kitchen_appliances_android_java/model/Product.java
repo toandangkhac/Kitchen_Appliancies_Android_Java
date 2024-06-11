@@ -7,10 +7,9 @@ public class Product  implements Serializable {
     private String name;
     private String description;
     private boolean status;
-
-
     private int categoryId;
     private double price;
+    private int quantity;
 
     public String getName() {
         return name;
@@ -60,4 +59,11 @@ public class Product  implements Serializable {
         this.status = status;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }

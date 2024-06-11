@@ -36,9 +36,34 @@
             android:exported="false">
         </activity>
         <activity
+            android:name=".activity.AdminMainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".activity.ProductDetail"
             android:exported="false">
         </activity>
+        <activity
+            android:name=".activity.AddProductActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".activity.EditProductActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".activity.OrderInfo"
+            android:exported="false">
+        </activity>
+
+
+
+
+
     </application>
 
 </manifest>
