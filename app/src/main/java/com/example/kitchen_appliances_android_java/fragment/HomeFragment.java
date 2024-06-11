@@ -6,12 +6,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -22,24 +23,21 @@ import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.kitchen_appliances_android_java.R;
-import com.example.kitchen_appliances_android_java.adapter.CategoryAdapter;
 import com.example.kitchen_appliances_android_java.adapter.ProductAdapter;
 import com.example.kitchen_appliances_android_java.api.TrustAllCertificatesSSLSocketFactory;
-import com.example.kitchen_appliances_android_java.model.ApiResponse;
+import com.example.kitchen_appliances_android_java.api.ApiResponse;
 import com.example.kitchen_appliances_android_java.model.Category;
+import com.example.kitchen_appliances_android_java.model.Image;
 import com.example.kitchen_appliances_android_java.model.Product;
-import com.example.kitchen_appliances_android_java.model.Token;
-import com.google.android.flexbox.FlexDirection;
-import com.google.android.flexbox.FlexboxLayoutManager;
-import com.google.android.flexbox.JustifyContent;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -48,7 +46,8 @@ import javax.net.ssl.SSLSession;
 public class HomeFragment extends Fragment {
     private HurlStack hurlStack;
     private ArrayList<Product> products;
-
+    private Map<Integer,String> images;
+    private ArrayList<Image> tempList;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -76,6 +75,7 @@ public class HomeFragment extends Fragment {
                 return httpsURLConnection;
             }
         };
+        images = new HashMap<>();
     }
 
     @Override
@@ -91,6 +91,9 @@ public class HomeFragment extends Fragment {
         loadCategories();
         setSearchView();
     }
+
+
+
 
     private void setSearchView() {
         SearchView searchView = getView().findViewById(R.id.searchView);
@@ -111,6 +114,28 @@ public class HomeFragment extends Fragment {
                 return true;
             }
         });
+    }
+    private void fetchImagesForProduct(Product product) {
+        RequestQueue queue = Volley.newRequestQueue(getContext(), hurlStack);
+        String url = "https://10.0.2.2:7161/api/Image/product/" + product.getId();
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    Gson gson = new Gson();
+                    ApiResponse<ArrayList<Image>> apiResponse = gson.fromJson(response, new TypeToken<ApiResponse<ArrayList<Image>>>() {}.getType());
+                    if (apiResponse != null && apiResponse.getStatus() == 200) {
+                        tempList = apiResponse.getData();
+                        Log.d("HomeFragment123", "Image URL: " + tempList.get(0).getUrl());
+                        product.setImage(tempList.get(0).getUrl());
+                    } else {
+//                        Toast.makeText(getContext(), "Error: Unable to fetch image data", Toast.LENGTH_SHORT).show();
+                        images.put(product.getId(), "https://via.placeholder.com/150");
+                    }
+                }, error -> {
+            error.printStackTrace();
+            Log.d("HomeFragment", "Error: " + error.getMessage());
+            Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+        });
+        queue.add(stringRequest);
     }
 
     private void loadCategories() {
@@ -153,7 +178,10 @@ public class HomeFragment extends Fragment {
                     ApiResponse<ArrayList<Product>> apiResponse = gson.fromJson(response, new TypeToken<ApiResponse<ArrayList<Product>>>() {}.getType());
                     if (apiResponse != null && apiResponse.getStatus() == 200) {
                         products = apiResponse.getData();
-                        updateUI(products);
+                        for(Product product: products){
+                            fetchImagesForProduct(product);
+                        }
+
                     } else {
                         Toast.makeText(getContext(), "Error: Unable to fetch product data", Toast.LENGTH_SHORT).show();
                     }
