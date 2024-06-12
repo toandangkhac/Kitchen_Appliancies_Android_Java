@@ -84,56 +84,63 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                String url = "https://10.0.2.2:7161/api/Account/login";
-                // Check login status
-                SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
-                String email = sharedPreferences.getString("email", "");
-                String password = sharedPreferences.getString("password", "");
-                JSONObject params = new JSONObject();
-                try {
-                    params.put("email", email);
-                    params.put("password", password);
-                } catch (JSONException e) {
-//                    e.printStackTrace();
-                    Log.e("SplashScreenActivity", "Error creating JSON params", e);
-                    return;
-                }
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                        (Request.Method.POST, url, params, response -> {
-//                                Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-//                                startActivity(intent);
-                            Gson gson = new Gson();
-                            Type responseType = new TypeToken<ApiResponse<Token>>(){}.getType();
-                            ApiResponse<Token> token = gson.fromJson(String.valueOf(response), responseType);
+                //test cho nhanh
+                Intent intent = new Intent(SplashScreenActivity.this, AdminMainActivity.class);
+                startActivity(intent);
+                finish();
 
-                            String decodeString = JwtDecoder.getInstance().decodeToken(token.getData().getAccessToken());
-
-
-// ...
-
-                            if(decodeString.contains("Khách hàng")){
-                                Log.d("SplashScreenActivity", "Decoded token: " + "Khách hàng");
-                            } else if (decodeString.contains("Nhân viên")) {
-                                Log.d("SplashScreenActivity", "Decoded token: " + "Nhân viên");
-                            } else {
-                                Log.d("SplashScreenActivity", "Decoded token: " + "Admin");
-
-                            }
-                            Log.d("SplashScreenActivity", "Decoded token: " +decodeString);
-                            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
-                            finish();
-
-                        }, error ->  {
-                            Log.e("SplashScreenActivity", "Login Error", error);
-//                            Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-//                            startActivity(intent);
-                            startActivity(new Intent(SplashScreenActivity.this, LoginSignUpActivity.class));
-                            finish();
-                        });
-
-
-                RequestQueue queue = Volley.newRequestQueue(getApplicationContext(), hurlStack);
-                queue.add(jsonObjectRequest);
+//                String url = "https://10.0.2.2:7161/api/Account/login";
+//                // Check login status
+//                SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+//                String email = sharedPreferences.getString("email", "");
+//                String password = sharedPreferences.getString("password", "");
+//                JSONObject params = new JSONObject();
+//                try {
+//                    params.put("email", email);
+//                    params.put("password", password);
+//                } catch (JSONException e) {
+////                    e.printStackTrace();
+//                    Log.e("SplashScreenActivity", "Error creating JSON params", e);
+//                    return;
+//                }
+//                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+//                        (Request.Method.POST, url, params, response -> {
+////                            Intent intent = new Intent(SplashScreenActivity.this, AdminMainActivity.class);
+////                            startActivity(intent);
+//
+//                            Gson gson = new Gson();
+//                            Type responseType = new TypeToken<ApiResponse<Token>>(){}.getType();
+//                            ApiResponse<Token> token = gson.fromJson(String.valueOf(response), responseType);
+//
+//                            String decodeString = JwtDecoder.getInstance().decodeToken(token.getData().getAccessToken());
+//
+//
+//// ...
+//
+//                            if(decodeString.contains("Khách hàng")){
+//                                Log.d("SplashScreenActivity", "Decoded token: " + "Khách hàng");
+//                            } else if (decodeString.contains("Nhân viên")) {
+//                                Log.d("SplashScreenActivity", "Decoded token: " + "Nhân viên");
+//                            } else {
+//                                Log.d("SplashScreenActivity", "Decoded token: " + "Admin");
+//
+//                            }
+//                            Log.d("SplashScreenActivity", "Decoded token: " +decodeString);
+//
+//                            startActivity(new Intent(SplashScreenActivity.this, AdminMainActivity.class)); //MainActivity
+//                            finish();
+//
+//                        }, error ->  {
+//                            Log.e("SplashScreenActivity", "Login Error", error);
+////                            Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+////                            startActivity(intent);
+//                            startActivity(new Intent(SplashScreenActivity.this, LoginSignUpActivity.class));
+//                            finish();
+//                        });
+//
+//
+//                RequestQueue queue = Volley.newRequestQueue(getApplicationContext(), hurlStack);
+//                queue.add(jsonObjectRequest);
 
 
             }

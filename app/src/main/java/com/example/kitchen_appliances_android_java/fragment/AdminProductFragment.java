@@ -1,13 +1,16 @@
 package com.example.kitchen_appliances_android_java.fragment;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -31,6 +34,9 @@ import com.example.kitchen_appliances_android_java.model.Category;
 import com.example.kitchen_appliances_android_java.model.Product;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -70,6 +76,58 @@ public class AdminProductFragment extends Fragment {
         btn_add_product.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), AddProductActivity.class);
             v.getContext().startActivity(intent);
+        });
+
+        btn_add_category.setOnClickListener(v ->  {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Thêm danh mục");
+
+            // Tạo EditText để nhập văn bản
+            final EditText editText = new EditText(getContext());
+            builder.setView(editText);
+
+            // Thêm nút "Xác nhận"
+            builder.setPositiveButton("Xác nhận", (dialog, which) -> {
+                String categoryName = editText.getText().toString();
+//                Toast.makeText(getContext(), categoryName, Toast.LENGTH_LONG).show();
+                RequestQueue queue = Volley.newRequestQueue(requireContext(), hurlStack);
+                String url = "https://10.0.2.2:7161/api/Category";
+
+                JSONObject requestData = new JSONObject();
+                try {
+                    requestData.put("name", categoryName);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                    response -> {
+                        ApiResponse apiResponse = new Gson().fromJson(response, ApiResponse.class);
+                        if(apiResponse.getStatus()==200) {
+                            Toast.makeText(getContext(), apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), apiResponse.getStatus() + ": " + apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }, error -> {
+                        Log.e("API Error", error.toString());
+                })  {
+                    @Override
+                    public byte[] getBody() {
+                        return requestData.toString().getBytes();
+                    }
+
+                    @Override
+                    public String getBodyContentType() {
+                        return "application/json";
+                    }
+                };
+            });
+
+            builder.setNegativeButton("Hủy", (dialog, which) -> {
+                //nothing
+            });
+
+            builder.show();
         });
     }
 

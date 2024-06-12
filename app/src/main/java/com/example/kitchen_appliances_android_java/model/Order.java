@@ -1,11 +1,12 @@
 package com.example.kitchen_appliances_android_java.model;
 
 import java.io.Serializable;
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 
 public class Order implements Serializable {
     private int id;
-//    private LocalDateTime createAt;
+    private String createAt;
     private int customerId;
     private int status;
     private boolean paymentStatus;
@@ -19,13 +20,13 @@ public class Order implements Serializable {
         this.id = id;
     }
 
-//    public LocalDateTime getCreateAt() {
-//        return createAt;
-//    }
+    public String getCreateAt() {
+        return createAt;
+    }
 
-//    public void setCreateAt(LocalDateTime createAt) {
-//        this.createAt = createAt;
-//    }
+    public void setCreateAt(String createAt) {
+        this.createAt = createAt;
+    }
 
     public int getCustomerId() {
         return customerId;

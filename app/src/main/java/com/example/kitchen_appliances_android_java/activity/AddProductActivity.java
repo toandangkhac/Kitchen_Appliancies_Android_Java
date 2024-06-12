@@ -65,7 +65,7 @@ public class AddProductActivity extends AppCompatActivity {
         String quantity = edt_quantity.getText().toString();
 
         RequestQueue queue = Volley.newRequestQueue(this, hurlStack);
-        String apiUrl = "https://localhost:7161/api/Product" +
+        String apiUrl = "https://10.0.2.2:7161/api/Product" +
                 "?Name=" + name +
                 "&Description=" + description +
                 "&CategoryId=" + category +
@@ -75,8 +75,12 @@ public class AddProductActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, apiUrl,
                 response -> {
                     ApiResponse apiResponse = new Gson().fromJson(response, ApiResponse.class);
-                    Toast.makeText(this, apiResponse.getStatus() + ": " + apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.d("API Response", response);
+                    if(apiResponse.getStatus()==200) {
+                        Toast.makeText(AddProductActivity.this, apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else{
+                        Toast.makeText(this, apiResponse.getStatus() + ": " + apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.d("API Response", response);
+                    }
                 },
                 error -> {
                     Log.e("API Error", error.toString());
@@ -98,8 +102,9 @@ public class AddProductActivity extends AppCompatActivity {
                     if (apiResponse != null && apiResponse.getStatus() == 200) {
                         ArrayList<Category> categories = apiResponse.getData();
                         updateCategoriesUI(categories);
+                        Toast.makeText(AddProductActivity.this, apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(AddProductActivity.this, "Error: Unable to fetch category data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddProductActivity.this, apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }, error -> {
             error.printStackTrace();

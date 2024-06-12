@@ -69,18 +69,24 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
         }
 
-        public void bind(Order order) {
-//            order_time.setText(String.valueOf(order.getCreateAt()));
+        public void bind(@NonNull Order order) {
+            order_time.setText(order.getCreateAt());
             if (order.isPaymentStatus()) {
                 payStatus.setText("Đã thanh toán");
             } else {
                 payStatus.setText("Chưa thanh toán");
             }
+
             if (order.getStatus()==1) {
                 orderStatus.setText("Chưa xác nhận");
-            } else {
+            } else if (order.getStatus()==2)    {
                 orderStatus.setText("Đã xác nhận");
+            } else if (order.getStatus()==3) {
+                orderStatus.setText("Đã nhận hàng");
+            } else if (order.getStatus()==0) {
+                orderStatus.setText("Đã hủy");
             }
+
 
         }
     }

@@ -3,13 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/admin_navigation"
-    app:startDestination="@+id/admin_home">
+    app:startDestination="@+id/admin_product">
 
-    <fragment
-        android:id="@+id/admin_home"
-        android:name="com.example.kitchen_appliances_android_java.fragment.AdminHomeFragment"
-        android:label="Home"
-        tools:layout="@layout/fragment_admin_home" />
 
     <fragment
         android:id="@+id/admin_product"
