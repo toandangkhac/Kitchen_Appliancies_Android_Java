@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -21,20 +19,15 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BaseHttpStack;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.kitchen_appliances_android_java.R;
 import com.example.kitchen_appliances_android_java.api.TrustAllCertificatesSSLSocketFactory;
-import com.example.kitchen_appliances_android_java.model.ApiResponse;
+import com.example.kitchen_appliances_android_java.api.ApiResponse;
 import com.example.kitchen_appliances_android_java.model.Token;
-import com.example.kitchen_appliances_android_java.model.TokenResponse;
 import com.example.kitchen_appliances_android_java.util.JwtDecoder;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
@@ -84,16 +77,14 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                Intent intent = new Intent(SplashScreenActivity.this, AdminMainActivity.class);
-//                startActivity(intent);
-//                finish();  //test cho nhanh
 
-
-                String url = "https://10.0.2.2:7161/api/Account/login";
+                String url = "https://10.0.2.2:7178/gateway/account/login";
                 // Check login status
                 SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
                 String email = sharedPreferences.getString("email", "");
                 String password = sharedPreferences.getString("password", "");
+                int customerId = sharedPreferences.getInt("customerId", 0);
+                Log.d("SplashScreenActivity111", "CustomerId: " + customerId);
                 JSONObject params = new JSONObject();
                 try {
                     params.put("email", email);
@@ -105,9 +96,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                 }
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                         (Request.Method.POST, url, params, response -> {
-//                            Intent intent = new Intent(SplashScreenActivity.this, AdminMainActivity.class);
-//                            startActivity(intent);
-
+//                                Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+//                                startActivity(intent);
                             Gson gson = new Gson();
                             Type responseType = new TypeToken<ApiResponse<Token>>(){}.getType();
                             ApiResponse<Token> token = gson.fromJson(String.valueOf(response), responseType);
@@ -119,28 +109,21 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                             if(decodeString.contains("Khách hàng")){
                                 Log.d("SplashScreenActivity", "Decoded token: " + "Khách hàng");
-                                startActivity(new Intent(SplashScreenActivity.this, MainActivity.class)); //MainActivity
-                                finish();
                             } else if (decodeString.contains("Nhân viên")) {
                                 Log.d("SplashScreenActivity", "Decoded token: " + "Nhân viên");
-                                startActivity(new Intent(SplashScreenActivity.this, AdminMainActivity.class)); //MainActivity
-                                finish();
                             } else {
                                 Log.d("SplashScreenActivity", "Decoded token: " + "Admin");
-                                startActivity(new Intent(SplashScreenActivity.this, AdminMainActivity.class)); //MainActivity
-                                finish();
 
                             }
                             Log.d("SplashScreenActivity", "Decoded token: " +decodeString);
-//
-//                            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class)); //MainActivity
-//                            finish();
+                            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+                            finish();
 
                         }, error ->  {
                             Log.e("SplashScreenActivity", "Login Error", error);
 //                            Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
 //                            startActivity(intent);
-                            startActivity(new Intent(SplashScreenActivity.this, AdminMainActivity.class)); //LoginSignUpActivity
+                            startActivity(new Intent(SplashScreenActivity.this, LoginSignUpActivity.class));
                             finish();
                         });
 
