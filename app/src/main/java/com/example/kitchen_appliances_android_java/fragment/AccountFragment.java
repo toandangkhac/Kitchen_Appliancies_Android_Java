@@ -14,8 +14,12 @@ import android.widget.Button;
 
 import com.example.kitchen_appliances_android_java.R;
 import com.example.kitchen_appliances_android_java.activity.LoginSignUpActivity;
+import com.example.kitchen_appliances_android_java.databinding.FragmentAccountBinding;
+import com.example.kitchen_appliances_android_java.databinding.FragmentAdminAccountBinding;
 
 public class AccountFragment extends Fragment {
+    private FragmentAccountBinding binding;
+
     Button btnLogout;
 
     public AccountFragment() {
@@ -32,6 +36,7 @@ public class AccountFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        binding = FragmentAccountBinding.inflate(inflater, container, false);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 

@@ -1,5 +1,6 @@
 package com.example.kitchen_appliances_android_java.fragment;
 
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,10 +29,12 @@ import com.example.kitchen_appliances_android_java.R;
 import com.example.kitchen_appliances_android_java.activity.AddProductActivity;
 import com.example.kitchen_appliances_android_java.adapter.AdminProductAdapter;
 import com.example.kitchen_appliances_android_java.api.ApiResponse;
+import com.example.kitchen_appliances_android_java.api.ApiService;
 import com.example.kitchen_appliances_android_java.api.TrustAllCertificatesSSLSocketFactory;
 import com.example.kitchen_appliances_android_java.databinding.FragmentAdminProductBinding;
 
 import com.example.kitchen_appliances_android_java.model.Category;
+import com.example.kitchen_appliances_android_java.model.Image;
 import com.example.kitchen_appliances_android_java.model.Product;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -48,12 +51,12 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
-public class AdminProductFragment extends Fragment {
+public class AdminProductFragment extends Fragment implements AdminProductAdapter.OnProductDeletedListener{
     private FragmentAdminProductBinding binding;
     private View root;
     private HurlStack hurlStack;
     private ArrayList<Product> products;
-
+    private ApiService apiService;
     private Button btnProduct, btnCategory, btn_add_product, btn_add_category;
     private Spinner spinner_category;
     private RecyclerView rv_item;
@@ -90,7 +93,7 @@ public class AdminProductFragment extends Fragment {
             // Thêm nút "Xác nhận"
             builder.setPositiveButton("Xác nhận", (dialog, which) -> {
                 String categoryName = editText.getText().toString();
-//                Toast.makeText(getContext(), categoryName, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), categoryName, Toast.LENGTH_LONG).show();
                 RequestQueue queue = Volley.newRequestQueue(requireContext(), hurlStack);
                 String url = "https://10.0.2.2:7161/api/Category";
 
@@ -122,6 +125,8 @@ public class AdminProductFragment extends Fragment {
                         return "application/json";
                     }
                 };
+                queue.add(stringRequest);
+
             });
 
             builder.setNegativeButton("Hủy", (dialog, which) -> {
@@ -161,12 +166,14 @@ public class AdminProductFragment extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
             response -> {
                 Gson gson = new Gson();
-
                 ApiResponse<ArrayList<Product>> apiResponse = gson.fromJson(response, new TypeToken<ApiResponse<ArrayList<Product>>>() {}.getType());
                 if (apiResponse != null && apiResponse.getStatus() == 200) {
-//                        Toast.makeText(getContext(), apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     products = apiResponse.getData();
-                    updateUI(products);
+                    for (Product product : products) {
+                        getImg(product);
+                        updateUI(products);
+                    }
+//                    updateUI(products);
                 } else {
                     Toast.makeText(getContext(), apiResponse.getStatus() + ": " + apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -175,6 +182,33 @@ public class AdminProductFragment extends Fragment {
                 Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             });
         queue.add(stringRequest);
+    }
+
+    private void getImg(Product prd) {
+        RequestQueue queue = Volley.newRequestQueue(getContext(), hurlStack);
+        String url = "https://10.0.2.2:7161/api/Image/product/" + prd.getId();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    Gson gson = new Gson();
+                    ApiResponse<ArrayList<Image>> apiResponse = gson.fromJson(response, new TypeToken<ApiResponse<ArrayList<Image>>>() {
+                    }.getType());
+                    if (apiResponse != null && apiResponse.getStatus() == 200) {
+                        ArrayList<Image> images = apiResponse.getData();
+                        if (!images.isEmpty()) {
+                            prd.setImage(images.get(0).getUrl());
+                        }
+                        Toast.makeText(getContext(), apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }, error -> {
+            error.printStackTrace();
+            Log.d("Error for get img", error.getMessage());
+        });
+        queue.add(stringRequest);
+
+
     }
 
     private void loadCategories() {
@@ -231,11 +265,37 @@ public class AdminProductFragment extends Fragment {
 
     }
 
+
     private void updateUI(ArrayList<Product> filteredProducts) {
 //        Toast.makeText(getContext(), "prd: " + filteredProducts.size(), Toast.LENGTH_SHORT).show();
-        AdminProductAdapter adapter = new AdminProductAdapter(filteredProducts);
+        AdminProductAdapter adapter = new AdminProductAdapter(filteredProducts, this);
         rv_item.setAdapter(adapter);
         rv_item.setLayoutManager(new LinearLayoutManager(getContext()));
+
+    }
+
+    @Override
+    public void onProductDeleted(Product product) {
+        deleteProduct(product);
+    }
+
+    private void deleteProduct(Product prd) {
+        RequestQueue queue = Volley.newRequestQueue(getContext(), hurlStack);
+        String url = "https://10.0.2.2:7161/api/Product/" + String.valueOf(prd.getId());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url,
+            response -> {
+                ApiResponse apiResponse = new Gson().fromJson(response, ApiResponse.class);
+                if(apiResponse.getStatus()==200){
+                    Toast.makeText(getContext(), apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(),  apiResponse.getStatus()+": "+ apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }, error -> {
+                error.printStackTrace();
+                Toast.makeText(getContext(), "Error at delete: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+        });
+        queue.add(stringRequest);
     }
 
     public void link() {
@@ -250,4 +310,6 @@ public class AdminProductFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+
 }

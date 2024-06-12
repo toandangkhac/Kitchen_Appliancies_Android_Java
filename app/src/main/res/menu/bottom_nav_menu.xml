@@ -18,7 +18,7 @@
 
     <item
         android:id="@+id/navigation_account"
-        android:icon="@drawable/account_icon"
+        android:icon="@drawable/account_icon_2"
         android:title="Tài khoản" />
 
 </menu>

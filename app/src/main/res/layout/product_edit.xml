@@ -4,13 +4,35 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CHỈNH SỬA THÔNG TIN SẢN PHẨM"
+        android:gravity="center"
+        android:textSize="20dp"/>
+
     <ImageView
         android:id="@+id/ivProductImage"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:src="@drawable/kitchen_icon"
+        />
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_launcher_background" />
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Url ảnh"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/url_img"/>
 
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

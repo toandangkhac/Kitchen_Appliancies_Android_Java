@@ -37,7 +37,7 @@ public class EditProductActivity extends AppCompatActivity {
     private HurlStack hurlStack;
     private Product product;
 
-    EditText edt_product_name, edt_product_price, edt_description, edt_quantity;
+    EditText edt_product_name, edt_product_price, edt_description, edt_quantity, url_img;
     Button btnConfirm;
 
     @Override
@@ -57,11 +57,52 @@ public class EditProductActivity extends AppCompatActivity {
         edt_quantity.setText(String.valueOf(product.getQuantity()));
 
         btnConfirm.setOnClickListener(v -> {
-            confirm();
+            confirmChange();
+            String img = url_img.getText().toString();
+            if(img!="") {
+                UploadImg(img,  product.getId());
+            }
         });
     }
 
-    private void confirm() {
+    private void UploadImg(String urlImage, int prId) {
+        RequestQueue queue = Volley.newRequestQueue(this, hurlStack);
+        String apiUrl = "https://10.0.2.2:7161/api/Image";
+
+        JSONObject requestData = new JSONObject();
+        try {
+            requestData.put("url", urlImage);
+            requestData.put("productId", prId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, apiUrl,
+                response -> {
+                    Log.d("Error at add image", "vao response");
+                    ApiResponse apiResponse = new Gson().fromJson(response, ApiResponse.class);
+                    if(apiResponse.getStatus()==200){
+                        Toast.makeText(EditProductActivity.this, apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(EditProductActivity.this,apiResponse.getStatus() + ": "+ apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }, error -> {
+            Log.d("Error at add image", error.getMessage());
+        }) {
+            @Override
+            public byte[] getBody() {
+                return requestData.toString().getBytes();
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };;
+        queue.add(stringRequest);
+    }
+
+    private void confirmChange() {
         String name = edt_product_name.getText().toString();
         double price = Double.parseDouble(edt_product_price.getText().toString());
         String description = edt_description.getText().toString();
@@ -133,6 +174,7 @@ public class EditProductActivity extends AppCompatActivity {
         edt_description = findViewById(R.id.edt_description);
         edt_quantity = findViewById(R.id.edt_quantity);
         btnConfirm = findViewById(R.id.btnConfirm);
+        url_img = findViewById(R.id.url_img);
     }
 
 }

@@ -22,4 +22,9 @@
         android:name="com.example.kitchen_appliances_android_java.fragment.AdminAccountFragment"
         android:label="Account"
         tools:layout="@layout/fragment_admin_account" />
+    <fragment
+        android:id="@+id/info_account"
+        android:name="com.example.kitchen_appliances_android_java.fragment.AccountFragment"
+        android:label="fragment_account"
+        tools:layout="@layout/fragment_account" />
 </navigation>
