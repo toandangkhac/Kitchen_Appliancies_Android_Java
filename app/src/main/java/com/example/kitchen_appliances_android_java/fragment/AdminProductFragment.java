@@ -27,9 +27,10 @@ import com.android.volley.toolbox.Volley;
 import com.example.kitchen_appliances_android_java.R;
 import com.example.kitchen_appliances_android_java.activity.AddProductActivity;
 import com.example.kitchen_appliances_android_java.adapter.AdminProductAdapter;
+import com.example.kitchen_appliances_android_java.api.ApiResponse;
 import com.example.kitchen_appliances_android_java.api.TrustAllCertificatesSSLSocketFactory;
 import com.example.kitchen_appliances_android_java.databinding.FragmentAdminProductBinding;
-import com.example.kitchen_appliances_android_java.model.ApiResponse;
+
 import com.example.kitchen_appliances_android_java.model.Category;
 import com.example.kitchen_appliances_android_java.model.Product;
 import com.google.gson.Gson;

@@ -14,6 +14,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.kitchen_appliances_android_java.model.CartItem;
 import com.example.kitchen_appliances_android_java.model.Customer;
 import com.example.kitchen_appliances_android_java.model.Image;
+import com.example.kitchen_appliances_android_java.model.Order;
 import com.example.kitchen_appliances_android_java.model.Product;
 import com.example.kitchen_appliances_android_java.model.Token;
 import com.example.kitchen_appliances_android_java.util.JwtDecoder;
@@ -45,6 +46,12 @@ public class ApiService {
 
     public interface LoginCallback {
         void onLoginSuccess(String decodeString);
+
+        void onError(Exception e);
+    }
+
+    public interface OrderCallback {
+        void onSuccess(ArrayList<Order> orders);
 
         void onError(Exception e);
     }
@@ -149,46 +156,66 @@ public class ApiService {
     }
 
     public void loadProducts(ProductCallback callback) {
-    RequestQueue queue = Volley.newRequestQueue(context, hurlStack);
-    String url = "https://10.0.2.2:7161/api/Product";
-    StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-            response -> {
-                Gson gson = new Gson();
-                ApiResponse<ArrayList<Product>> apiResponse = gson.fromJson(response, new TypeToken<ApiResponse<ArrayList<Product>>>() {
-                }.getType());
-                if (apiResponse != null && apiResponse.getStatus() == 200) {
-                    ArrayList<Product> products = apiResponse.getData();
-                    AtomicInteger counter = new AtomicInteger(products.size());
-                    for (Product product : products) {
-                        fetchImagesForProduct(product, new ImageCallback() {
-                            @Override
-                            public void onSuccess(ArrayList<Image> images) {
-                                if (!images.isEmpty()) {
-                                    product.setImage(images.get(0).getUrl());
+        RequestQueue queue = Volley.newRequestQueue(context, hurlStack);
+        String url = "https://10.0.2.2:7161/api/Product";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    Gson gson = new Gson();
+                    ApiResponse<ArrayList<Product>> apiResponse = gson.fromJson(response, new TypeToken<ApiResponse<ArrayList<Product>>>() {
+                    }.getType());
+                    if (apiResponse != null && apiResponse.getStatus() == 200) {
+                        ArrayList<Product> products = apiResponse.getData();
+                        AtomicInteger counter = new AtomicInteger(products.size());
+                        for (Product product : products) {
+                            fetchImagesForProduct(product, new ImageCallback() {
+                                @Override
+                                public void onSuccess(ArrayList<Image> images) {
+                                    if (!images.isEmpty()) {
+                                        product.setImage(images.get(0).getUrl());
+                                    }
+                                    if (counter.decrementAndGet() == 0) {
+                                        callback.onSuccess(products);
+                                    }
                                 }
-                                if (counter.decrementAndGet() == 0) {
-                                    callback.onSuccess(products);
-                                }
-                            }
 
-                            @Override
-                            public void onError(Exception e) {
-                                e.printStackTrace();
-                                if (counter.decrementAndGet() == 0) {
-                                    callback.onSuccess(products);
+                                @Override
+                                public void onError(Exception e) {
+                                    e.printStackTrace();
+                                    if (counter.decrementAndGet() == 0) {
+                                        callback.onSuccess(products);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
+                    } else {
+                        callback.onError(new Exception("Error: Unable to fetch product data"));
                     }
-                } else {
-                    callback.onError(new Exception("Error: Unable to fetch product data"));
-                }
-            }, error -> {
-        error.printStackTrace();
-        callback.onError(error);
-    });
-    queue.add(stringRequest);
-}
+                }, error -> {
+            error.printStackTrace();
+            callback.onError(error);
+        });
+        queue.add(stringRequest);
+    }
+
+    public void loadOrders(int customerId, OrderCallback callback) {
+        RequestQueue queue = Volley.newRequestQueue(context, hurlStack);
+        String url = "https://10.0.2.2:7161/api/Order/get-order-by-customer/" + String.valueOf(customerId);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    Gson gson = new Gson();
+                    ApiResponse<ArrayList<Order>> apiResponse = gson.fromJson(response, new TypeToken<ApiResponse<ArrayList<Order>>>() {
+                    }.getType());
+                    if (apiResponse != null && apiResponse.getStatus() == 200) {
+                        callback.onSuccess(apiResponse.getData());
+                    } else {
+                        callback.onError(new Exception("Error: Unable to fetch order data"));
+                    }
+                }, error -> {
+            error.printStackTrace();
+            callback.onError(error);
+        });
+        queue.add(stringRequest);
+    }
 
     public void fetchImagesForProduct(Product product, ImageCallback callback) {
         RequestQueue queue = Volley.newRequestQueue(context, hurlStack);

@@ -19,10 +19,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.kitchen_appliances_android_java.R;
 import com.example.kitchen_appliances_android_java.adapter.AccountsAdapter;
+import com.example.kitchen_appliances_android_java.api.ApiResponse;
 import com.example.kitchen_appliances_android_java.api.TrustAllCertificatesSSLSocketFactory;
 import com.example.kitchen_appliances_android_java.databinding.FragmentAdminAccountBinding;
 import com.example.kitchen_appliances_android_java.model.Account;
-import com.example.kitchen_appliances_android_java.model.ApiResponse;
+
 import com.example.kitchen_appliances_android_java.model.Order;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
