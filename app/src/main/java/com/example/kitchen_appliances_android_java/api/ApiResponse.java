@@ -1,4 +1,4 @@
-package com.example.kitchen_appliances_android_java.model;
+package com.example.kitchen_appliances_android_java.api;
 
 import java.util.List;
 

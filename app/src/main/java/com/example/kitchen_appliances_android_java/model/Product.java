@@ -7,12 +7,24 @@ public class Product  implements Serializable {
     private String name;
     private String description;
     private boolean status;
+
+    private String image;
+
+
     private int categoryId;
     private double price;
     private int quantity;
 
     public String getName() {
         return name;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public void setName(String name) {
