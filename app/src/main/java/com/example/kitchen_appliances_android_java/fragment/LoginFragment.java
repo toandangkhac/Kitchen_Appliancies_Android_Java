@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.kitchen_appliances_android_java.R;
+import com.example.kitchen_appliances_android_java.activity.AdminMainActivity;
 import com.example.kitchen_appliances_android_java.activity.MainActivity;
 import com.example.kitchen_appliances_android_java.activity.ProductDetail;
 import com.example.kitchen_appliances_android_java.api.ApiService;
@@ -84,11 +85,11 @@ public class LoginFragment extends Fragment {
                         });
 
                     } else if (decodeString.contains("Quản trị viên")) {
-                        Intent intent = new Intent(getActivity(), ProductDetail.class);
+                        Intent intent = new Intent(getActivity(), AdminMainActivity.class);
                         getActivity().finish();
                         startActivity(intent);
                     } else {
-                        Intent intent = new Intent(getActivity(), ProductDetail.class);
+                        Intent intent = new Intent(getActivity(), AdminMainActivity.class);
                         getActivity().finish();
                         startActivity(intent);
                     }
