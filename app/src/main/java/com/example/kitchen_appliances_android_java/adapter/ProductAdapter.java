@@ -1,6 +1,7 @@
 package com.example.kitchen_appliances_android_java.adapter;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.kitchen_appliances_android_java.R;
 import com.example.kitchen_appliances_android_java.activity.ProductDetail;
+import com.example.kitchen_appliances_android_java.fragment.ProductDetailFragment;
 import com.example.kitchen_appliances_android_java.model.Product;
 
 import java.util.ArrayList;
@@ -60,9 +63,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
                         Product clickedProduct = products.get(position);
-                        Intent intent = new Intent(v.getContext(), ProductDetail.class);
-                        intent.putExtra("product", clickedProduct);
-                        v.getContext().startActivity(intent);
+                        ProductDetailFragment fragment = new ProductDetailFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("product", clickedProduct);
+                        fragment.setArguments(bundle);
+                        ((AppCompatActivity) v.getContext()).getSupportFragmentManager().beginTransaction().replace(R.id.appHostFragment, fragment).commit();
                     }
                 }
             });

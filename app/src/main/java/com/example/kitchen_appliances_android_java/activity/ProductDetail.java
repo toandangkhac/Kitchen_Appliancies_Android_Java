@@ -40,7 +40,7 @@ public class ProductDetail extends AppCompatActivity {
     private HurlStack hurlStack;
     private Product product;
     private TextView tvQuantity, tvTotal, tvProductPrice, tvProductName, tvProductDescription, tvProductCategory;
-    private ImageView ivProductImage;
+
     private Button btnDecreaseQuantity, btnIncreaseQuantity, btnAddToCart;
 
     @Override
@@ -52,7 +52,7 @@ public class ProductDetail extends AppCompatActivity {
         rtHurlStack();
         product = (Product) getIntent().getSerializableExtra("product");
 
-        ivProductImage = findViewById(R.id.ivProductImage);
+
         tvProductName = findViewById(R.id.tvProductName);
         tvProductDescription = findViewById(R.id.tvProductDescription);
         tvProductCategory = findViewById(R.id.tvProductCategory);
