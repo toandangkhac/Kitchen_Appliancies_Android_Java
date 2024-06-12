@@ -84,63 +84,69 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                //test cho nhanh
-                Intent intent = new Intent(SplashScreenActivity.this, AdminMainActivity.class);
-                startActivity(intent);
-                finish();
+//                Intent intent = new Intent(SplashScreenActivity.this, AdminMainActivity.class);
+//                startActivity(intent);
+//                finish();  //test cho nhanh
 
-//                String url = "https://10.0.2.2:7161/api/Account/login";
-//                // Check login status
-//                SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
-//                String email = sharedPreferences.getString("email", "");
-//                String password = sharedPreferences.getString("password", "");
-//                JSONObject params = new JSONObject();
-//                try {
-//                    params.put("email", email);
-//                    params.put("password", password);
-//                } catch (JSONException e) {
-////                    e.printStackTrace();
-//                    Log.e("SplashScreenActivity", "Error creating JSON params", e);
-//                    return;
-//                }
-//                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-//                        (Request.Method.POST, url, params, response -> {
-////                            Intent intent = new Intent(SplashScreenActivity.this, AdminMainActivity.class);
-////                            startActivity(intent);
+
+                String url = "https://10.0.2.2:7161/api/Account/login";
+                // Check login status
+                SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+                String email = sharedPreferences.getString("email", "");
+                String password = sharedPreferences.getString("password", "");
+                JSONObject params = new JSONObject();
+                try {
+                    params.put("email", email);
+                    params.put("password", password);
+                } catch (JSONException e) {
+//                    e.printStackTrace();
+                    Log.e("SplashScreenActivity", "Error creating JSON params", e);
+                    return;
+                }
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (Request.Method.POST, url, params, response -> {
+//                            Intent intent = new Intent(SplashScreenActivity.this, AdminMainActivity.class);
+//                            startActivity(intent);
+
+                            Gson gson = new Gson();
+                            Type responseType = new TypeToken<ApiResponse<Token>>(){}.getType();
+                            ApiResponse<Token> token = gson.fromJson(String.valueOf(response), responseType);
+
+                            String decodeString = JwtDecoder.getInstance().decodeToken(token.getData().getAccessToken());
+
+
+// ...
+
+                            if(decodeString.contains("Khách hàng")){
+                                Log.d("SplashScreenActivity", "Decoded token: " + "Khách hàng");
+                                startActivity(new Intent(SplashScreenActivity.this, MainActivity.class)); //MainActivity
+                                finish();
+                            } else if (decodeString.contains("Nhân viên")) {
+                                Log.d("SplashScreenActivity", "Decoded token: " + "Nhân viên");
+                                startActivity(new Intent(SplashScreenActivity.this, AdminMainActivity.class)); //MainActivity
+                                finish();
+                            } else {
+                                Log.d("SplashScreenActivity", "Decoded token: " + "Admin");
+                                startActivity(new Intent(SplashScreenActivity.this, AdminMainActivity.class)); //MainActivity
+                                finish();
+
+                            }
+                            Log.d("SplashScreenActivity", "Decoded token: " +decodeString);
 //
-//                            Gson gson = new Gson();
-//                            Type responseType = new TypeToken<ApiResponse<Token>>(){}.getType();
-//                            ApiResponse<Token> token = gson.fromJson(String.valueOf(response), responseType);
-//
-//                            String decodeString = JwtDecoder.getInstance().decodeToken(token.getData().getAccessToken());
-//
-//
-//// ...
-//
-//                            if(decodeString.contains("Khách hàng")){
-//                                Log.d("SplashScreenActivity", "Decoded token: " + "Khách hàng");
-//                            } else if (decodeString.contains("Nhân viên")) {
-//                                Log.d("SplashScreenActivity", "Decoded token: " + "Nhân viên");
-//                            } else {
-//                                Log.d("SplashScreenActivity", "Decoded token: " + "Admin");
-//
-//                            }
-//                            Log.d("SplashScreenActivity", "Decoded token: " +decodeString);
-//
-//                            startActivity(new Intent(SplashScreenActivity.this, AdminMainActivity.class)); //MainActivity
+//                            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class)); //MainActivity
 //                            finish();
-//
-//                        }, error ->  {
-//                            Log.e("SplashScreenActivity", "Login Error", error);
-////                            Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-////                            startActivity(intent);
-//                            startActivity(new Intent(SplashScreenActivity.this, LoginSignUpActivity.class));
-//                            finish();
-//                        });
-//
-//
-//                RequestQueue queue = Volley.newRequestQueue(getApplicationContext(), hurlStack);
-//                queue.add(jsonObjectRequest);
+
+                        }, error ->  {
+                            Log.e("SplashScreenActivity", "Login Error", error);
+//                            Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+//                            startActivity(intent);
+                            startActivity(new Intent(SplashScreenActivity.this, AdminMainActivity.class)); //LoginSignUpActivity
+                            finish();
+                        });
+
+
+                RequestQueue queue = Volley.newRequestQueue(getApplicationContext(), hurlStack);
+                queue.add(jsonObjectRequest);
 
 
             }

@@ -147,6 +147,7 @@ public class OrderInfo extends AppCompatActivity {
             tv_status_order.setText("Chưa xác nhận");
         } else if (order.getStatus()==2)    {
             tv_status_order.setText("Đã xác nhận");
+            btn_confirm_order.setVisibility(View.GONE);
             btn_delete_order.setVisibility(View.GONE);
         } else if (order.getStatus()==3) {
             btn_confirm_order.setVisibility(View.GONE);
