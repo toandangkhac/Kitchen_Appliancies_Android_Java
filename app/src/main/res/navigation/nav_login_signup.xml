@@ -15,6 +15,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_loginFragment_to_verifyOtpFragment"
+            app:destination="@id/verifyOtpFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -31,5 +34,8 @@
         android:id="@+id/verifyOtpFragment"
         android:name="com.example.kitchen_appliances_android_java.fragment.VerifyOtpFragment"
         android:label="fragment_verify_otp"
-        tools:layout="@layout/fragment_verify_otp" />
+        tools:layout="@layout/fragment_verify_otp" >
+
+
+    </fragment>
 </navigation>

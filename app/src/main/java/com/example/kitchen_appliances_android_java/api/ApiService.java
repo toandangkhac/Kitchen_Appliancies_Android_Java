@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -11,6 +12,9 @@ import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.kitchen_appliances_android_java.Request.CreateCustomerRequest;
+import com.example.kitchen_appliances_android_java.Request.ResendOTPRequest;
+import com.example.kitchen_appliances_android_java.Request.VerifyOTPRequest;
 import com.example.kitchen_appliances_android_java.model.CartItem;
 import com.example.kitchen_appliances_android_java.model.Customer;
 import com.example.kitchen_appliances_android_java.model.Image;
@@ -19,6 +23,7 @@ import com.example.kitchen_appliances_android_java.model.Product;
 import com.example.kitchen_appliances_android_java.model.Token;
 import com.example.kitchen_appliances_android_java.util.JwtDecoder;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
@@ -276,6 +281,108 @@ public class ApiService {
             callback.onError(error);
         });
         queue.add(stringRequest);
+    }
+    public void signup(CreateCustomerRequest createCustomerRequest, SignUpCallback callback) {
+        RequestQueue queue = Volley.newRequestQueue(context, hurlStack);
+        String url = "https://10.0.2.2:7161/api/Customer";
+        JSONObject params = new JSONObject();
+        try {
+            params.put("email", createCustomerRequest.getEmail());
+            params.put("password", createCustomerRequest.getPassword());
+            params.put("fullname", createCustomerRequest.getFullname());
+            params.put("phoneNumber", createCustomerRequest.getPhoneNumber());
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params,
+                response -> {
+                    Gson gson = new Gson();
+                    Type responseType = new TypeToken<ApiResponse<Boolean>>(){}.getType();
+                    ApiResponse<Boolean> apiResponse = gson.fromJson(String.valueOf(response), responseType);
+                    if(apiResponse.getStatus() != 200 && apiResponse.getData()) {
+                        callback.onSignUpSuccess(false);
+                        return;
+                    }
+                    callback.onSignUpSuccess(apiResponse.getData());
+                }, error -> {
+                    error.printStackTrace();
+                    callback.onError(error);
+                });
+        queue.add(jsonObjectRequest);
+    }
+
+    public void resendOTP(ResendOTPRequest resendOTPRequest, ResendOTPRequestCallback callback) {
+        RequestQueue queue = Volley.newRequestQueue(context, hurlStack);
+        String url = "https://7161/api/Account/resend-otp";
+        JSONObject params = new JSONObject();
+        try {
+            params.put("email", resendOTPRequest.getEmail());
+            params.put("type", resendOTPRequest.getType());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, params,
+                response -> {
+                    Gson gson = new Gson();
+                    Type responseType = new TypeToken<ApiResponse<Boolean>>() {
+                    }.getType();
+                    ApiResponse<Boolean> apiResponse = gson.fromJson(String.valueOf(response), responseType);
+                    if (apiResponse.getStatus() != 200 && apiResponse.getData()) {
+
+                        callback.onResendOTPSuccess(apiResponse.getData());
+                        return;
+                    }
+                    callback.onResendOTPSuccess(false);
+                }, error -> {
+            error.printStackTrace();
+            callback.onError(error);
+        });
+        queue.add(jsonObjectRequest);
+
+    }
+    public void verifyOTP(VerifyOTPRequest verifyOTPRequest, VerifyOTPRequestCallback callback) {
+        RequestQueue queue = Volley.newRequestQueue(context, hurlStack);
+        String url = "https://10.0.2.2:7161/api/Employee/active-account";
+        JSONObject params = new JSONObject();
+        try {
+            params.put("email", verifyOTPRequest.getEmail());
+            params.put("otp", verifyOTPRequest.getOtp());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params,
+                response -> {
+                    Gson gson = new Gson();
+                    Type responseType = new TypeToken<ApiResponse<Boolean>>() {
+                    }.getType();
+                    ApiResponse<Boolean> apiResponse = gson.fromJson(String.valueOf(response), responseType);
+                    if (apiResponse.getStatus() == 200 && apiResponse.getData()) {
+                        callback.onVerifyOTPSuccess(apiResponse.getData());
+                    }
+                    else {
+                        callback.onVerifyOTPSuccess(false);
+                    }
+
+                }, error -> {
+            error.printStackTrace();
+            callback.onError(error);
+        });
+        queue.add(jsonObjectRequest);
+    }
+    public interface VerifyOTPRequestCallback {
+        void onVerifyOTPSuccess(Boolean result);
+
+        void onError(Exception e);
+    }
+    public interface ResendOTPRequestCallback {
+        void onResendOTPSuccess(Boolean result);
+
+        void onError(Exception e);
+    }
+    public interface SignUpCallback {
+        void onSignUpSuccess(Boolean result);
+
+        void onError(Exception e);
     }
 
     public interface SingleProductCallback {

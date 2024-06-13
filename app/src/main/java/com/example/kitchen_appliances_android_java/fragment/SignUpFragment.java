@@ -6,15 +6,22 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.example.kitchen_appliances_android_java.R;
+import com.example.kitchen_appliances_android_java.Request.CreateCustomerRequest;
+import com.example.kitchen_appliances_android_java.api.ApiService;
 import com.example.kitchen_appliances_android_java.databinding.FragmentSignupBinding;
 
 public class SignUpFragment extends Fragment {
+    ApiService apiService;
     private FragmentSignupBinding binding;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -22,6 +29,7 @@ public class SignUpFragment extends Fragment {
         binding = FragmentSignupBinding.inflate(inflater, container, false);
         // Inflate the layout for this fragment
         View view = binding.getRoot();
+        apiService = new ApiService(getContext());
         return view;
     }
 
@@ -78,9 +86,36 @@ public class SignUpFragment extends Fragment {
                     binding.confirmPasswordInput.setError("Mật khẩu không khớp");
                     return;
                 }
+                CreateCustomerRequest createCustomerRequest = new CreateCustomerRequest(name, phone, address, email, password);
+                apiService.signup(createCustomerRequest, new ApiService.SignUpCallback() {
+                    @Override
+                    public void onSignUpSuccess(Boolean result) {
+                        if (result) {
+                            // Handle sign up success
+
+                            Toast.makeText(getContext(), "Đăng ký thành công", Toast.LENGTH_SHORT).show();
+                            Bundle bundle = new Bundle();
+
+                            bundle.putString("email", email);
+//                            VerifyOtpFragment fragment = new VerifyOtpFragment();
+//                            fragment.setArguments(bundle);
+//                            ((AppCompatActivity) v.getContext()).getSupportFragmentManager().beginTransaction().replace(R.id.appHostFragment, fragment).commit();
+//                            bundle.putSerializable("createCustomerRequest", createCustomerRequest);
+                            findNavController(SignUpFragment.this).navigate(R.id.action_signUpFragment_to_verifyOtpFragment, bundle);
+                        } else {
+                            // Handle sign up failure
+                            Toast.makeText(getContext(), "Đăng ký thất bại", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
 
-                findNavController(SignUpFragment.this).navigate(R.id.action_signUpFragment_to_verifyOtpFragment);
             }
         });
     }

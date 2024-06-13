@@ -83,6 +83,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
                 String email = sharedPreferences.getString("email", "");
                 String password = sharedPreferences.getString("password", "");
+                if (email.isEmpty() || password.isEmpty()) {
+                    startActivity(new Intent(SplashScreenActivity.this, LoginSignUpActivity.class));
+                    finish();
+                    return;
+                }
                 int customerId = sharedPreferences.getInt("customerId", 0);
                 Log.d("SplashScreenActivity111", "CustomerId: " + customerId);
                 JSONObject params = new JSONObject();
