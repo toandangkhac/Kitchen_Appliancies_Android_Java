@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -59,10 +60,10 @@ public class AdminProductFragment extends Fragment implements AdminProductAdapte
     private ApiService apiService;
     private HurlStack hurlStack;
     private ArrayList<Product> products;
-    private Button  btn_add_product, btn_add_category;
+    private Button  btn_add_product, btn_add_category, btn_change_item;
     private Spinner spinner_category;
     private RecyclerView rv_item, rv_category;
-
+    private TextView tv_title_name;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -136,6 +137,20 @@ public class AdminProductFragment extends Fragment implements AdminProductAdapte
             });
 
             builder.show();
+        });
+
+        btn_change_item.setOnClickListener(v -> {
+            if(rv_category.getVisibility() == View.GONE){
+                rv_category.setVisibility(View.VISIBLE);
+                rv_item.setVisibility(View.GONE);
+                spinner_category.setVisibility(View.GONE);
+                tv_title_name.setText("DANH SÁCH DANH MỤC");
+            } else {
+                rv_item.setVisibility(View.VISIBLE);
+                spinner_category.setVisibility(View.VISIBLE);
+                rv_category.setVisibility(View.GONE);
+                tv_title_name.setText("DANH SÁCH SẢN PHẨM");
+            }
         });
     }
 
@@ -382,6 +397,8 @@ public class AdminProductFragment extends Fragment implements AdminProductAdapte
         spinner_category = root.findViewById(R.id.spn_category);
         rv_item = root.findViewById(R.id.rv_product_category);
         rv_category = root.findViewById(R.id.rv_category);
+        btn_change_item = root.findViewById(R.id.btn_change_item);
+        tv_title_name = root.findViewById(R.id.tv_title_name);
     }
 
     @Override
