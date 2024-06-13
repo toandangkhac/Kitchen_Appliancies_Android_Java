@@ -30,7 +30,7 @@ public class AdminMainActivity extends AppCompatActivity {
 
         BottomNavigationView navView = findViewById(R.id.bottomMenu);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.admin_product, R.id.admin_order, R.id.admin_account)
+                R.id.admin_product, R.id.admin_order, R.id.admin_account, R.id.info_account)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.appHostFragment);
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);

@@ -1,10 +1,12 @@
 package com.example.kitchen_appliances_android_java.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -15,6 +17,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.example.kitchen_appliances_android_java.R;
 import com.example.kitchen_appliances_android_java.api.ApiResponse;
 import com.example.kitchen_appliances_android_java.api.TrustAllCertificatesSSLSocketFactory;
@@ -37,8 +40,9 @@ public class EditProductActivity extends AppCompatActivity {
     private HurlStack hurlStack;
     private Product product;
 
-    EditText edt_product_name, edt_product_price, edt_description, edt_quantity;
+    EditText edt_product_name, edt_product_price, edt_description, edt_quantity, url_img;
     Button btnConfirm;
+    ImageView iv_product_img;
 
     @Override
     @SuppressLint("MissingInflatedId")
@@ -55,13 +59,55 @@ public class EditProductActivity extends AppCompatActivity {
         edt_product_price.setText(String.valueOf(product.getPrice()));
         edt_description.setText(product.getDescription());
         edt_quantity.setText(String.valueOf(product.getQuantity()));
+        Glide.with(EditProductActivity.this).load(product.getImage()).into(iv_product_img);
 
         btnConfirm.setOnClickListener(v -> {
-            confirm();
+            confirmChange();
+            String img = url_img.getText().toString();
+            if(img!="") {
+                UploadImg(img,  product.getId());
+            }
         });
     }
 
-    private void confirm() {
+    private void UploadImg(String urlImage, int prId) {
+        RequestQueue queue = Volley.newRequestQueue(this, hurlStack);
+        String apiUrl = "https://10.0.2.2:7161/api/Image";
+
+        JSONObject requestData = new JSONObject();
+        try {
+            requestData.put("url", urlImage);
+            requestData.put("productId", prId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, apiUrl,
+                response -> {
+                    Log.d("Error at add image", "vao response");
+                    ApiResponse apiResponse = new Gson().fromJson(response, ApiResponse.class);
+                    if(apiResponse.getStatus()==200){
+                        Toast.makeText(EditProductActivity.this, apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(EditProductActivity.this,apiResponse.getStatus() + ": "+ apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }, error -> {
+            Log.d("Error at add image", error.getMessage());
+        }) {
+            @Override
+            public byte[] getBody() {
+                return requestData.toString().getBytes();
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };;
+        queue.add(stringRequest);
+    }
+
+    private void confirmChange() {
         String name = edt_product_name.getText().toString();
         double price = Double.parseDouble(edt_product_price.getText().toString());
         String description = edt_description.getText().toString();
@@ -133,6 +179,8 @@ public class EditProductActivity extends AppCompatActivity {
         edt_description = findViewById(R.id.edt_description);
         edt_quantity = findViewById(R.id.edt_quantity);
         btnConfirm = findViewById(R.id.btnConfirm);
+        url_img = findViewById(R.id.url_img);
+        iv_product_img = findViewById(R.id.iv_product_img);
     }
 
 }

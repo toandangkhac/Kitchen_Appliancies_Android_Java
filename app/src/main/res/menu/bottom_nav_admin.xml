@@ -15,4 +15,9 @@
         android:id="@+id/admin_account"
         android:icon="@drawable/account_icon"
         android:title="Tài khoản" />
+
+    <item
+        android:id="@+id/info_account"
+        android:icon="@drawable/account_icon"
+        android:title="Tài khoản" />
 </menu>

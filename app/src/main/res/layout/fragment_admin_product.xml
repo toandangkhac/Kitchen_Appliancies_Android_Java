@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".fragment.AdminProductFragment"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tv_title_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="DANH SÁCH SẢN PHẨM"
@@ -29,7 +29,15 @@
         android:layout_margin="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:visibility="visible"
     />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:id="@+id/rv_category"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,21 +45,35 @@
         android:gravity="center">
         <Button
             android:id="@+id/btn_add_product"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_gravity="center"
             android:text="Add Product"
             android:visibility="visible" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_gravity="center"
             android:text="Add Category"
             android:id="@+id/btn_add_category"
             android:visibility="visible"
             />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:text="Change item"
+            android:id="@+id/btn_change_item"
+            android:visibility="visible"
+            />
+
     </LinearLayout>
+
+
 
 
 

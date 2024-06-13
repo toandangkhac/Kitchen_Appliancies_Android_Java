@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -42,7 +43,7 @@ public class AddProductActivity extends AppCompatActivity {
     private HurlStack hurlStack;
     private Product product;
     private Category selectedCategory;
-    EditText edt_product_name, edt_product_price, edt_description, edt_quantity;
+    EditText edt_product_name, edt_product_price, edt_description, edt_quantity, product_url_img;
     Button btnConfirm;
     Spinner spn_category;
     
@@ -58,6 +59,43 @@ public class AddProductActivity extends AppCompatActivity {
         btnConfirm.setOnClickListener(v -> {
             CreateNewProduct();
         });
+    }
+
+    private void UploadImg(String urlImage, int prId) {
+        RequestQueue queue = Volley.newRequestQueue(this, hurlStack);
+        String apiUrl = "https://10.0.2.2:7161/api/Image";
+
+        JSONObject requestData = new JSONObject();
+        try {
+            requestData.put("url", urlImage);
+            requestData.put("productId", prId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, apiUrl,
+                response -> {
+                    Log.d("Error at add image", "vao response");
+                    ApiResponse apiResponse = new Gson().fromJson(response, ApiResponse.class);
+                    if(apiResponse.getStatus()==200){
+                        Toast.makeText(AddProductActivity.this, apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(AddProductActivity.this,apiResponse.getStatus() + ": "+ apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }, error -> {
+            Log.d("Error at add image", error.getMessage());
+        }) {
+            @Override
+            public byte[] getBody() {
+                return requestData.toString().getBytes();
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };;
+        queue.add(stringRequest);
     }
 
     private void CreateNewProduct() {
@@ -92,7 +130,7 @@ public class AddProductActivity extends AppCompatActivity {
                 },
                 error -> {
                     Log.e("API Error", error.toString());
-                }) {
+                }){
             @Override
             public byte[] getBody() {
                 return requestData.toString().getBytes();
@@ -103,6 +141,7 @@ public class AddProductActivity extends AppCompatActivity {
                 return "application/json";
             }
         };
+
 
         // Thêm yêu cầu vào hàng đợi
         queue.add(stringRequest);
@@ -179,6 +218,7 @@ public class AddProductActivity extends AppCompatActivity {
         edt_quantity = findViewById(R.id.edt_quantity);
         btnConfirm = findViewById(R.id.btnConfirm);
         spn_category = findViewById(R.id.spn_category);
+        product_url_img = findViewById(R.id.product_url_img);
     }
 
 }

@@ -48,7 +48,7 @@ public class OrderInfo extends AppCompatActivity {
     private int testEmployeeId = 1;
 
     private ListView list_orderdetail;
-    private TextView tv_employee, tv_name_customer,  tv_status_order, tv_time_order, status_payment, tv_total, count_product;
+    private TextView tv_address, tv_employee, tv_name_customer,  tv_status_order, tv_time_order, status_payment, tv_total, count_product;
     private Button btn_delete_order, btn_confirm_order;
 
     @Override
@@ -148,6 +148,7 @@ public class OrderInfo extends AppCompatActivity {
             tv_status_order.setText("Chưa xác nhận");
         } else if (order.getStatus()==2)    {
             tv_status_order.setText("Đã xác nhận");
+            btn_confirm_order.setVisibility(View.GONE);
             btn_delete_order.setVisibility(View.GONE);
         } else if (order.getStatus()==3) {
             btn_confirm_order.setVisibility(View.GONE);
@@ -163,6 +164,8 @@ public class OrderInfo extends AppCompatActivity {
         } else {
             status_payment.setText("Chưa thanh toán");
         }
+
+        tv_address.setText(order.getAddressShipping());
 
         tv_employee.setText(String.valueOf(order.getEmployeeId()));
 
@@ -201,6 +204,7 @@ public class OrderInfo extends AppCompatActivity {
         btn_confirm_order = findViewById(R.id.btn_confirm_order);
         count_product = findViewById(R.id.count_product);
         tv_employee = findViewById(R.id.tv_employee);
+        tv_address = findViewById(R.id.tv_address);
     }
 
     public void getListItem() {

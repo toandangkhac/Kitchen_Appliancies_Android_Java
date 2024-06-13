@@ -11,6 +11,7 @@ public class Order implements Serializable {
     private int status;
     private boolean paymentStatus;
     private Integer employeeId;
+    private  String addressShipping;
 
     public int getId() {
         return id;
@@ -58,5 +59,13 @@ public class Order implements Serializable {
 
     public void setEmployeeId(Integer employeeId) {
         this.employeeId = employeeId;
+    }
+
+    public String getAddressShipping() {
+        return addressShipping;
+    }
+
+    public void setAddressShipping(String addressShipping) {
+        this.addressShipping = addressShipping;
     }
 }
