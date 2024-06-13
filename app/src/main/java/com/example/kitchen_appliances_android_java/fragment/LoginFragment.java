@@ -25,6 +25,7 @@ import com.example.kitchen_appliances_android_java.databinding.FragmentLoginBind
 import java.util.List;
 
 import com.example.kitchen_appliances_android_java.model.Customer;
+import com.example.kitchen_appliances_android_java.model.Employee;
 
 public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
@@ -88,10 +89,48 @@ public class LoginFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), AdminMainActivity.class);
                         getActivity().finish();
                         startActivity(intent);
+                        apiService.loadEmployee(new ApiService.LoadEmployeeCallback() {
+                            @Override
+                            public void onEmployeeLoaded(List<Employee> employees) {
+                                for (Employee e : employees) {
+                                    if (e.getEmail().equals(email)) {
+                                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MySharedPref", MODE_PRIVATE);
+                                        SharedPreferences.Editor myEdit = sharedPreferences.edit();
+                                        myEdit.putInt("employeeId", e.getId());
+                                        myEdit.commit();
+                                        return;
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                // Handle the error
+                            }
+                        });
                     } else {
                         Intent intent = new Intent(getActivity(), AdminMainActivity.class);
                         getActivity().finish();
                         startActivity(intent);
+                        apiService.loadEmployee(new ApiService.LoadEmployeeCallback() {
+                            @Override
+                            public void onEmployeeLoaded(List<Employee> employees) {
+                                for (Employee e : employees) {
+                                    if (e.getEmail().equals(email)) {
+                                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MySharedPref", MODE_PRIVATE);
+                                        SharedPreferences.Editor myEdit = sharedPreferences.edit();
+                                        myEdit.putInt("employeeId", e.getId());
+                                        myEdit.commit();
+                                        return;
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                // Handle the error
+                            }
+                        });
                     }
                     SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MySharedPref", MODE_PRIVATE);
                     SharedPreferences.Editor myEdit = sharedPreferences.edit();

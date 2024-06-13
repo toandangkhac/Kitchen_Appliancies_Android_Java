@@ -17,6 +17,7 @@ import com.example.kitchen_appliances_android_java.Request.ResendOTPRequest;
 import com.example.kitchen_appliances_android_java.Request.VerifyOTPRequest;
 import com.example.kitchen_appliances_android_java.model.CartItem;
 import com.example.kitchen_appliances_android_java.model.Customer;
+import com.example.kitchen_appliances_android_java.model.Employee;
 import com.example.kitchen_appliances_android_java.model.Image;
 import com.example.kitchen_appliances_android_java.model.Order;
 import com.example.kitchen_appliances_android_java.model.Product;
@@ -48,6 +49,13 @@ public class ApiService {
 
         void onError(Exception e);
     }
+
+    public interface LoadEmployeeCallback {
+        void onEmployeeLoaded(List<Employee> employees);
+
+        void onError(Exception e);
+    }
+
 
     public interface LoginCallback {
         void onLoginSuccess(String decodeString);
@@ -139,6 +147,35 @@ public class ApiService {
 
         queue.add(stringRequest);
     }
+
+    public void loadEmployee(LoadEmployeeCallback callback) {
+        String url = "https://10.0.2.2:7178/gateway/employee";
+        RequestQueue queue = Volley.newRequestQueue(context, hurlStack);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    Gson gson = new Gson();
+                    Type responseType = new TypeToken<ApiResponse<ArrayList<Employee>>>() {
+                    }.getType();
+                    ApiResponse<ArrayList<Employee>> apiResponse = gson.fromJson(response, responseType);
+                    if (apiResponse != null && apiResponse.getStatus() == 200) {
+                        ArrayList<Employee> employees = apiResponse.getData();
+                        callback.onEmployeeLoaded(employees);
+                    } else {
+                        callback.onError(new Exception("Unable to fetch customer data"));
+                    }
+                }, error -> {
+            error.printStackTrace();
+            callback.onError(error);
+        });
+
+        queue.add(stringRequest);
+
+
+    }
+
+
+
 
     public void loadCartDetails(int customerId, CartDetailsCallback callback) {
         RequestQueue queue = Volley.newRequestQueue(context, hurlStack);
