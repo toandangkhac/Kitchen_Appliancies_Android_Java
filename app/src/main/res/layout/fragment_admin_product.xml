@@ -24,30 +24,35 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="500dp"
         android:id="@+id/rv_product_category"
         android:layout_margin="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
     />
-
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Add Product"
-        android:id="@+id/btn_add_product"
-        android:visibility="visible"
-        />
+        android:orientation="horizontal"
+        android:gravity="center">
+        <Button
+            android:id="@+id/btn_add_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Add Product"
+            android:visibility="visible" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Add Category"
-        android:id="@+id/btn_add_category"
-        android:visibility="visible"
-        />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Add Category"
+            android:id="@+id/btn_add_category"
+            android:visibility="visible"
+            />
+    </LinearLayout>
+
 
 
 </LinearLayout>

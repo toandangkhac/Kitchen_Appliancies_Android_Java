@@ -26,6 +26,9 @@ import com.example.kitchen_appliances_android_java.model.Product;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -65,12 +68,17 @@ public class AddProductActivity extends AppCompatActivity {
         String quantity = edt_quantity.getText().toString();
 
         RequestQueue queue = Volley.newRequestQueue(this, hurlStack);
-        String apiUrl = "https://10.0.2.2:7161/api/Product" +
-                "?Name=" + name +
-                "&Description=" + description +
-                "&CategoryId=" + category +
-                "&Price=" + price +
-                "&Quantity=" + quantity;
+        String apiUrl = "https://10.0.2.2:7161/api/Product";
+        JSONObject requestData = new JSONObject();
+        try {
+            requestData.put("name", name);
+            requestData.put("description", description);
+            requestData.put("categoryId", category);
+            requestData.put("quantity", quantity);
+            requestData.put("price", price);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, apiUrl,
                 response -> {
@@ -84,7 +92,17 @@ public class AddProductActivity extends AppCompatActivity {
                 },
                 error -> {
                     Log.e("API Error", error.toString());
-                });
+                }) {
+            @Override
+            public byte[] getBody() {
+                return requestData.toString().getBytes();
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };
 
         // Thêm yêu cầu vào hàng đợi
         queue.add(stringRequest);
