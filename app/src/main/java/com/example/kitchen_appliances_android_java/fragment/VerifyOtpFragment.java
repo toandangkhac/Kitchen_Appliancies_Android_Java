@@ -58,6 +58,9 @@ public class VerifyOtpFragment extends Fragment {
         resendOtpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                countDownTimer.onTick(300000);
+                countDownTimer.start();
+                resendOtpButton.setVisibility(View.INVISIBLE);
 
                 // Resend OTP
                 ResendOTPRequest resendOTPRequest = new ResendOTPRequest(email,"REGISTER_OTP");
@@ -66,8 +69,7 @@ public class VerifyOtpFragment extends Fragment {
                     @Override
                     public void onResendOTPSuccess(Boolean result) {
                         if (result) {
-                            countDownTimer.start();
-                            verifyOtpButton.setVisibility(View.GONE);
+
                         }
                         else {
                             Toast.makeText(getContext(), "Resend OTP failed", Toast.LENGTH_SHORT).show();
@@ -251,6 +253,6 @@ public class VerifyOtpFragment extends Fragment {
         }
         setControl();
         setEvent();
-//        countDownTimer.start();
+        countDownTimer.start();
     }
 }
