@@ -70,6 +70,7 @@ public class AdminProductFragment extends Fragment implements AdminProductAdapte
 
         link();
         loadProducts();
+
         loadCategories();
 
         setEvent();
@@ -171,7 +172,7 @@ public class AdminProductFragment extends Fragment implements AdminProductAdapte
                     products = apiResponse.getData();
                     for (Product product : products) {
                         getImg(product);
-                        updateUI(products);
+
                     }
 //                    updateUI(products);
                 } else {
@@ -191,14 +192,13 @@ public class AdminProductFragment extends Fragment implements AdminProductAdapte
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
                     Gson gson = new Gson();
-                    ApiResponse<ArrayList<Image>> apiResponse = gson.fromJson(response, new TypeToken<ApiResponse<ArrayList<Image>>>() {
-                    }.getType());
+                    ApiResponse<ArrayList<Image>> apiResponse = gson.fromJson(response, new TypeToken<ApiResponse<ArrayList<Image>>>() {}.getType());
                     if (apiResponse != null && apiResponse.getStatus() == 200) {
                         ArrayList<Image> images = apiResponse.getData();
                         if (!images.isEmpty()) {
                             prd.setImage(images.get(0).getUrl());
                         }
-                        Toast.makeText(getContext(), apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getContext(), apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getContext(), apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -207,7 +207,6 @@ public class AdminProductFragment extends Fragment implements AdminProductAdapte
             Log.d("Error for get img", error.getMessage());
         });
         queue.add(stringRequest);
-
 
     }
 
@@ -221,6 +220,7 @@ public class AdminProductFragment extends Fragment implements AdminProductAdapte
                     if (apiResponse != null && apiResponse.getStatus() == 200) {
                         ArrayList<Category> categories = apiResponse.getData();
                         updateCategoriesUI(categories);
+
                     } else {
                         Toast.makeText(getContext(), "Error: Unable to fetch category data", Toast.LENGTH_SHORT).show();
                     }

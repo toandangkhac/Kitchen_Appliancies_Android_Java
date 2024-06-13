@@ -1,10 +1,12 @@
 package com.example.kitchen_appliances_android_java.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -15,6 +17,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.example.kitchen_appliances_android_java.R;
 import com.example.kitchen_appliances_android_java.api.ApiResponse;
 import com.example.kitchen_appliances_android_java.api.TrustAllCertificatesSSLSocketFactory;
@@ -39,6 +42,7 @@ public class EditProductActivity extends AppCompatActivity {
 
     EditText edt_product_name, edt_product_price, edt_description, edt_quantity, url_img;
     Button btnConfirm;
+    ImageView iv_product_img;
 
     @Override
     @SuppressLint("MissingInflatedId")
@@ -55,6 +59,7 @@ public class EditProductActivity extends AppCompatActivity {
         edt_product_price.setText(String.valueOf(product.getPrice()));
         edt_description.setText(product.getDescription());
         edt_quantity.setText(String.valueOf(product.getQuantity()));
+        Glide.with(EditProductActivity.this).load(product.getImage()).into(iv_product_img);
 
         btnConfirm.setOnClickListener(v -> {
             confirmChange();
@@ -175,6 +180,7 @@ public class EditProductActivity extends AppCompatActivity {
         edt_quantity = findViewById(R.id.edt_quantity);
         btnConfirm = findViewById(R.id.btnConfirm);
         url_img = findViewById(R.id.url_img);
+        iv_product_img = findViewById(R.id.iv_product_img);
     }
 
 }

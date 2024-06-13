@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -119,14 +120,9 @@ public class AddProductActivity extends AppCompatActivity {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, apiUrl,
                 response -> {
-                    Gson gson = new Gson();
-                    ApiResponse<ArrayList<Product>> apiResponse = gson.fromJson(response, new TypeToken<ApiResponse<ArrayList<Product>>>() {}.getType());
+                    ApiResponse apiResponse = new Gson().fromJson(response, ApiResponse.class);
                     if(apiResponse.getStatus()==200) {
                         Toast.makeText(AddProductActivity.this, apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                        Product pr = apiResponse.getData().get(0);
-                        String urlImage = product_url_img.getText().toString();
-                        UploadImg(urlImage, pr.getId());
-
                     } else{
                         Toast.makeText(this, apiResponse.getStatus() + ": " + apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
                         Log.d("API Response", response);
@@ -134,7 +130,7 @@ public class AddProductActivity extends AppCompatActivity {
                 },
                 error -> {
                     Log.e("API Error", error.toString());
-                }) {
+                }){
             @Override
             public byte[] getBody() {
                 return requestData.toString().getBytes();
@@ -145,6 +141,8 @@ public class AddProductActivity extends AppCompatActivity {
                 return "application/json";
             }
         };
+
+
         // Thêm yêu cầu vào hàng đợi
         queue.add(stringRequest);
 
