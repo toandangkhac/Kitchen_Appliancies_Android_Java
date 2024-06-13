@@ -101,7 +101,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                             Gson gson = new Gson();
                             Type responseType = new TypeToken<ApiResponse<Token>>(){}.getType();
                             ApiResponse<Token> token = gson.fromJson(String.valueOf(response), responseType);
-
+                            if(token.getStatus() != 200) {
+                                startActivity(new Intent(SplashScreenActivity.this, LoginSignUpActivity.class));
+                                finish();
+                                return;
+                            }
                             String decodeString = JwtDecoder.getInstance().decodeToken(token.getData().getAccessToken());
 
 
@@ -109,15 +113,21 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                             if(decodeString.contains("Khách hàng")){
                                 Log.d("SplashScreenActivity", "Decoded token: " + "Khách hàng");
+                                startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+                                finish();
                             } else if (decodeString.contains("Nhân viên")) {
                                 Log.d("SplashScreenActivity", "Decoded token: " + "Nhân viên");
+                                startActivity(new Intent(SplashScreenActivity.this, AdminMainActivity.class));
+                                finish();
                             } else {
                                 Log.d("SplashScreenActivity", "Decoded token: " + "Admin");
+                                startActivity(new Intent(SplashScreenActivity.this, AdminMainActivity.class));
+                                finish();
 
                             }
+
                             Log.d("SplashScreenActivity", "Decoded token: " +decodeString);
-                            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
-                            finish();
+
 
                         }, error ->  {
                             Log.e("SplashScreenActivity", "Login Error", error);

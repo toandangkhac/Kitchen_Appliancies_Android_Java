@@ -157,7 +157,8 @@ public class ApiService {
 
     public void loadProducts(ProductCallback callback) {
         RequestQueue queue = Volley.newRequestQueue(context, hurlStack);
-        String url = "https://10.0.2.2:7161/api/Product";
+//        String url = "https://10.0.2.2:7161/api/Product";
+        String url = "https://10.0.2.2:7178/gateway/product";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
                     Gson gson = new Gson();
@@ -199,7 +200,9 @@ public class ApiService {
 
     public void loadOrders(int customerId, OrderCallback callback) {
         RequestQueue queue = Volley.newRequestQueue(context, hurlStack);
-        String url = "https://10.0.2.2:7161/api/Order/get-order-by-customer/" + String.valueOf(customerId);
+//        String url = "https://10.0.2.2:7161/api/Order/get-order-by-customer/" + String.valueOf(customerId);
+        String url = "https://10.0.2.2:7178/gateway/Order/get-order-by-customer/" + String.valueOf(customerId);
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
                     Gson gson = new Gson();
@@ -219,7 +222,9 @@ public class ApiService {
 
     public void fetchImagesForProduct(Product product, ImageCallback callback) {
         RequestQueue queue = Volley.newRequestQueue(context, hurlStack);
-        String url = "https://10.0.2.2:7161/api/Image/product/" + product.getId();
+//        String url = "https://10.0.2.2:7161/api/Image/product/" + product.getId();
+        String url = "https://10.0.2.2:7178/gateway/Image/product/" + product.getId();
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
                     Gson gson = new Gson();
@@ -240,7 +245,8 @@ public class ApiService {
 
     public void loadProductById(int productId, SingleProductCallback callback) {
         RequestQueue queue = Volley.newRequestQueue(context, hurlStack);
-        String url = "https://10.0.2.2:7161/api/Product/" + productId;
+//        String url = "https://10.0.2.2:7161/api/Product/" + productId;
+        String url = "https://10.0.2.2:7178/gateway/Product/" + productId;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
                     Gson gson = new Gson();
