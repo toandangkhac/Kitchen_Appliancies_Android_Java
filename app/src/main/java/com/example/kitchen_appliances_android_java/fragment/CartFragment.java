@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ public class CartFragment extends Fragment {
     private ApiService apiService;
     private TextView tvTotalPrice;
     double totalPrice = 0;
+    private Button btnCheckout;
 
     public CartFragment() {
         // Required empty public constructor
@@ -54,13 +56,22 @@ public class CartFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         tvTotalPrice = view.findViewById(R.id.tvTotalPrice);
         loadCartDetails();
+        btnCheckout = view.findViewById(R.id.checkoutButton);
+
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        btnCheckout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences("MySharedPref", getContext().MODE_PRIVATE);
+                int customerId = sharedPreferences.getInt("customerId", 0);
 
+            }
+        });
     }
 
     public void loadCartDetails() {

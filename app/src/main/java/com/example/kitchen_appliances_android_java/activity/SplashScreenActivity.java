@@ -83,6 +83,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
                 String email = sharedPreferences.getString("email", "");
                 String password = sharedPreferences.getString("password", "");
+                if (email.isEmpty() || password.isEmpty()) {
+                    startActivity(new Intent(SplashScreenActivity.this, LoginSignUpActivity.class));
+                    finish();
+                    return;
+                }
                 int customerId = sharedPreferences.getInt("customerId", 0);
                 Log.d("SplashScreenActivity111", "CustomerId: " + customerId);
                 JSONObject params = new JSONObject();
@@ -101,7 +106,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                             Gson gson = new Gson();
                             Type responseType = new TypeToken<ApiResponse<Token>>(){}.getType();
                             ApiResponse<Token> token = gson.fromJson(String.valueOf(response), responseType);
-
+                            if(token.getStatus() != 200) {
+                                startActivity(new Intent(SplashScreenActivity.this, LoginSignUpActivity.class));
+                                finish();
+                                return;
+                            }
                             String decodeString = JwtDecoder.getInstance().decodeToken(token.getData().getAccessToken());
 
 
@@ -109,15 +118,21 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                             if(decodeString.contains("Khách hàng")){
                                 Log.d("SplashScreenActivity", "Decoded token: " + "Khách hàng");
+                                startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+                                finish();
                             } else if (decodeString.contains("Nhân viên")) {
                                 Log.d("SplashScreenActivity", "Decoded token: " + "Nhân viên");
+                                startActivity(new Intent(SplashScreenActivity.this, AdminMainActivity.class));
+                                finish();
                             } else {
                                 Log.d("SplashScreenActivity", "Decoded token: " + "Admin");
+                                startActivity(new Intent(SplashScreenActivity.this, AdminMainActivity.class));
+                                finish();
 
                             }
+
                             Log.d("SplashScreenActivity", "Decoded token: " +decodeString);
-                            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
-                            finish();
+
 
                         }, error ->  {
                             Log.e("SplashScreenActivity", "Login Error", error);

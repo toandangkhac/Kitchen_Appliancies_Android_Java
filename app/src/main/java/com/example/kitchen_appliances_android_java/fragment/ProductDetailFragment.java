@@ -1,5 +1,6 @@
 package com.example.kitchen_appliances_android_java.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.ref.Reference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -122,7 +124,9 @@ public class ProductDetailFragment extends Fragment {
         btnAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addToCart(testCustomerId, product.getId(), Integer.parseInt(tvQuantity.getText().toString()));
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences("MySharedPref", getContext().MODE_PRIVATE);
+                int customerId = sharedPreferences.getInt("customerId", 0);
+                addToCart(customerId, product.getId(), Integer.parseInt(tvQuantity.getText().toString()));
             }
         });
 

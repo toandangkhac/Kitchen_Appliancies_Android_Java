@@ -1,6 +1,7 @@
 package com.example.kitchen_appliances_android_java.activity;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -46,6 +47,7 @@ public class OrderInfo extends AppCompatActivity {
     private double total = 0;
     private int total_product = 0;
     private int testEmployeeId = 1;
+    private int EmployeeId;
 
     private ListView list_orderdetail;
     private TextView tv_address, tv_employee, tv_name_customer,  tv_status_order, tv_time_order, status_payment, tv_total, count_product;
@@ -104,12 +106,15 @@ public class OrderInfo extends AppCompatActivity {
     }
 
     private void confirmOrder() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+        EmployeeId = sharedPreferences.getInt("employeeId", 0);
+        Log.d("EmployeeId", String.valueOf(EmployeeId));
         RequestQueue queue = Volley.newRequestQueue(this, hurlStack);
         String url = "https://10.0.2.2:7161/api/Order/confirm-order-by-employee";
 
         JSONObject requestData = new JSONObject();
         try {
-            requestData.put("employeeId", testEmployeeId);
+            requestData.put("employeeId", EmployeeId);
             requestData.put("orderId", order.getId());
         } catch (JSONException e) {
             e.printStackTrace();

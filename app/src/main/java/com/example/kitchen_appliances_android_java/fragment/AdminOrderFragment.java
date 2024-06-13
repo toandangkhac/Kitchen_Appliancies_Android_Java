@@ -72,7 +72,7 @@ public class AdminOrderFragment extends Fragment {
     private void loadSpinner() {
         List<String> spinnerValues = new ArrayList<>();
         spinnerValues.add("Chưa xác nhận");
-        spinnerValues.add("Đã xác nhận");
+        spinnerValues.add("Tất cả");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, spinnerValues);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -83,7 +83,7 @@ public class AdminOrderFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (spn_order.getSelectedItem().toString().equals("Chưa xác nhận")) {
                     loadOrders(1);
-                } else if (spn_order.getSelectedItem().toString().equals("Đã xác nhận")) {
+                } else if (spn_order.getSelectedItem().toString().equals("Tất cả")) {
                     loadOrders(2);
                 }
             }
@@ -101,7 +101,7 @@ public class AdminOrderFragment extends Fragment {
         if(stt == 1){
             url = "https://10.0.2.2:7161/api/Order/list-order-not-confirm";
         } else if(stt == 2) {
-            url = "https://10.0.2.2:7161/api/Order/list-order-confirm";
+            url = "https://10.0.2.2:7161/api/Order/list-all-order";
         }
 
 

@@ -36,6 +36,7 @@
             android:maxLength="1"
             android:textAlignment="center" />
         <EditText
+            android:id="@+id/number2ofOtp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -43,6 +44,7 @@
             android:maxLength="1"
             android:textAlignment="center" />
         <EditText
+            android:id="@+id/number3ofOtp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -50,6 +52,7 @@
             android:maxLength="1"
             android:textAlignment="center" />
         <EditText
+            android:id="@+id/number4ofOtp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -57,6 +60,7 @@
             android:maxLength="1"
             android:textAlignment="center" />
         <EditText
+            android:id="@+id/number5ofOtp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -64,6 +68,7 @@
             android:maxLength="1"
             android:textAlignment="center" />
         <EditText
+            android:id="@+id/number6ofOtp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -72,13 +77,43 @@
             android:textAlignment="center" />
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mã OTP sẽ hết hiệu lực trong : "/>
+        <TextView
+            android:id="@+id/countdownTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"/>
+        <Button
+            android:id="@+id/resendOtpButton"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textSize="10sp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#EC8F07"
+            android:textColor="@color/black"
+            android:text="Gửi lại mã OTP"
+            android:visibility="invisible"
+            />
+    </LinearLayout>
+
+
+
     <Button
         android:id="@+id/verifyOtpButton"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Verify OTP"
-        android:background="@drawable/buttonshapebluebg"/>
+        android:backgroundTint="#09E85B"
+        android:textColor="@color/black"
+        android:text="Xác nhận OTP"
+        />
 
 
 
