@@ -97,7 +97,6 @@ public class AdminProductAdapter extends RecyclerView.Adapter<AdminProductAdapte
         public void bind(Product product) {
             product_name.setText(product.getName());
             product_price.setText(String.valueOf(product.getPrice()));
-//            Log.d("error load img", product.getImage());
             Glide.with(itemView.getContext()).load(product.getImage()).into(product_image);
         }
 

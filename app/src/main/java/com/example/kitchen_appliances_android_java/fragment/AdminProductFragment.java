@@ -28,6 +28,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.kitchen_appliances_android_java.R;
 import com.example.kitchen_appliances_android_java.activity.AddProductActivity;
 import com.example.kitchen_appliances_android_java.adapter.AdminProductAdapter;
+import com.example.kitchen_appliances_android_java.adapter.ListCategoryAdapter;
 import com.example.kitchen_appliances_android_java.api.ApiResponse;
 import com.example.kitchen_appliances_android_java.api.ApiService;
 import com.example.kitchen_appliances_android_java.api.TrustAllCertificatesSSLSocketFactory;
@@ -46,20 +47,21 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
-public class AdminProductFragment extends Fragment implements AdminProductAdapter.OnProductDeletedListener{
+public class AdminProductFragment extends Fragment implements AdminProductAdapter.OnProductDeletedListener, ListCategoryAdapter.OnCategoryListener{
     private FragmentAdminProductBinding binding;
     private View root;
+    private ApiService apiService;
     private HurlStack hurlStack;
     private ArrayList<Product> products;
-    private ApiService apiService;
-    private Button btnProduct, btnCategory, btn_add_product, btn_add_category;
+    private Button  btn_add_product, btn_add_category;
     private Spinner spinner_category;
-    private RecyclerView rv_item;
+    private RecyclerView rv_item, rv_category;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -70,7 +72,6 @@ public class AdminProductFragment extends Fragment implements AdminProductAdapte
 
         link();
         loadProducts();
-
         loadCategories();
 
         setEvent();
@@ -170,11 +171,7 @@ public class AdminProductFragment extends Fragment implements AdminProductAdapte
                 ApiResponse<ArrayList<Product>> apiResponse = gson.fromJson(response, new TypeToken<ApiResponse<ArrayList<Product>>>() {}.getType());
                 if (apiResponse != null && apiResponse.getStatus() == 200) {
                     products = apiResponse.getData();
-                    for (Product product : products) {
-                        getImg(product);
-
-                    }
-//                    updateUI(products);
+                    getImg(products);
                 } else {
                     Toast.makeText(getContext(), apiResponse.getStatus() + ": " + apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -185,29 +182,31 @@ public class AdminProductFragment extends Fragment implements AdminProductAdapte
         queue.add(stringRequest);
     }
 
-    private void getImg(Product prd) {
-        RequestQueue queue = Volley.newRequestQueue(getContext(), hurlStack);
-        String url = "https://10.0.2.2:7161/api/Image/product/" + prd.getId();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                response -> {
-                    Gson gson = new Gson();
-                    ApiResponse<ArrayList<Image>> apiResponse = gson.fromJson(response, new TypeToken<ApiResponse<ArrayList<Image>>>() {}.getType());
-                    if (apiResponse != null && apiResponse.getStatus() == 200) {
-                        ArrayList<Image> images = apiResponse.getData();
-                        if (!images.isEmpty()) {
-                            prd.setImage(images.get(0).getUrl());
+    private void getImg(ArrayList<Product> prds) {
+        for (Product prd : prds) {
+            RequestQueue queue = Volley.newRequestQueue(getContext(), hurlStack);
+            String url = "https://10.0.2.2:7161/api/Image/product/" + prd.getId();
+
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                    response -> {
+                        Gson gson = new Gson();
+                        ApiResponse<ArrayList<Image>> apiResponse = gson.fromJson(response, new TypeToken<ApiResponse<ArrayList<Image>>>() {}.getType());
+                        if (apiResponse != null && apiResponse.getStatus() == 200) {
+                            ArrayList<Image> images = apiResponse.getData();
+                            if (!images.isEmpty()) {
+                                prd.setImage(images.get(0).getUrl());
+                                updateUI(prds);
+                            }
+                        } else {
+                            Toast.makeText(getContext(), apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
                         }
-//                        Toast.makeText(getContext(), apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getContext(), apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }, error -> {
-            error.printStackTrace();
-            Log.d("Error for get img", error.getMessage());
-        });
-        queue.add(stringRequest);
-
+                    }, error -> {
+                error.printStackTrace();
+                Log.d("Error for get img", error.getMessage());
+            });
+            queue.add(stringRequest);
+        }
     }
 
     private void loadCategories() {
@@ -220,7 +219,7 @@ public class AdminProductFragment extends Fragment implements AdminProductAdapte
                     if (apiResponse != null && apiResponse.getStatus() == 200) {
                         ArrayList<Category> categories = apiResponse.getData();
                         updateCategoriesUI(categories);
-
+                        updateListCategory(categories);
                     } else {
                         Toast.makeText(getContext(), "Error: Unable to fetch category data", Toast.LENGTH_SHORT).show();
                     }
@@ -231,10 +230,22 @@ public class AdminProductFragment extends Fragment implements AdminProductAdapte
         queue.add(stringRequest);
     }
 
+    private void updateListCategory(ArrayList<Category> categories) {
+        ListCategoryAdapter adapter = new ListCategoryAdapter(categories, this);
+        rv_category.setAdapter(adapter);
+        rv_category.setLayoutManager(new LinearLayoutManager(getContext()));
+
+    }
+
     private void updateCategoriesUI(ArrayList<Category> categories) {
         ArrayAdapter<Category> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, categories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_category.setAdapter(adapter);
+
+        Category cafirst = categories.get(0);
+        if (cafirst!=null) {
+            filterProductsByCategory(cafirst.getId());
+        }
 
         spinner_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -265,14 +276,81 @@ public class AdminProductFragment extends Fragment implements AdminProductAdapte
 
     }
 
+    @Override
+    public void onButtonEdit(String strName, int ctgrId) {
+        editCategory(strName, ctgrId);
+    }
+
+    @Override
+    public void onButtonDelete(int ctgrId) {
+        deleteCategory(ctgrId);
+    }
+
+    private void editCategory(String strName, int ctgrId) {
+        RequestQueue queue = Volley.newRequestQueue(getContext(), hurlStack);
+        String url = "https://10.0.2.2:7161/api/Category/" + String.valueOf(ctgrId);
+
+        JSONObject requestData = new JSONObject();
+        try {
+            requestData.put("name", strName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, url,
+                response -> {
+                    ApiResponse apiResponse = new Gson().fromJson(response, ApiResponse.class);
+                    if(apiResponse.getStatus()==200){
+                        Toast.makeText(getContext(), apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(),  apiResponse.getStatus()+": "+ apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }, error -> {
+            error.printStackTrace();
+            Toast.makeText(getContext(), "Error at edit category: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+        }) {
+            @Override
+            public byte[] getBody() {
+                return requestData.toString().getBytes();
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };
+        queue.add(stringRequest);
+
+    }
+
+    private void deleteCategory(int ctgrId) {
+        RequestQueue queue = Volley.newRequestQueue(getContext(), hurlStack);
+        String url = "https://10.0.2.2:7161/api/Category/" + String.valueOf(ctgrId);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url,
+                response -> {
+                    ApiResponse apiResponse = new Gson().fromJson(response, ApiResponse.class);
+                    if(apiResponse.getStatus()==200){
+                        Toast.makeText(getContext(), apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(),  apiResponse.getStatus()+": "+ apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }, error -> {
+            error.printStackTrace();
+            Toast.makeText(getContext(), "Error at delete category: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+        });
+        queue.add(stringRequest);
+    }
+
 
     private void updateUI(ArrayList<Product> filteredProducts) {
 //        Toast.makeText(getContext(), "prd: " + filteredProducts.size(), Toast.LENGTH_SHORT).show();
         AdminProductAdapter adapter = new AdminProductAdapter(filteredProducts, this);
         rv_item.setAdapter(adapter);
         rv_item.setLayoutManager(new LinearLayoutManager(getContext()));
-
     }
+
+
 
     @Override
     public void onProductDeleted(Product product) {
@@ -303,6 +381,7 @@ public class AdminProductFragment extends Fragment implements AdminProductAdapte
         btn_add_category = root.findViewById(R.id.btn_add_category);
         spinner_category = root.findViewById(R.id.spn_category);
         rv_item = root.findViewById(R.id.rv_product_category);
+        rv_category = root.findViewById(R.id.rv_category);
     }
 
     @Override
@@ -310,6 +389,7 @@ public class AdminProductFragment extends Fragment implements AdminProductAdapte
         super.onDestroyView();
         binding = null;
     }
+
 
 
 }
