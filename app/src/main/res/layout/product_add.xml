@@ -8,7 +8,8 @@
         android:layout_height="wrap_content"
         android:text="THÊM SẢN PHẨM"
         android:textSize="30dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:layout_margin="10dp"/>
 
     <ImageView
         android:id="@+id/ivProductImage"
@@ -41,6 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tên: "
+            android:textSize="18sp"
             />
 
         <EditText
@@ -48,6 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
+            android:textSize="18sp"
             />
     </LinearLayout>
 
@@ -60,6 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Giá: "
+            android:textSize="18sp"
             />
 
         <EditText
@@ -67,6 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
+            android:textSize="18sp"
             />
     </LinearLayout>
 
@@ -78,11 +83,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mô tả: "
+            android:textSize="18sp"
             />
         <EditText
             android:id="@+id/edt_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="18sp"
             />
     </LinearLayout>
 
@@ -94,6 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Số lượng: "
+            android:textSize="18sp"
             />
 
         <EditText
@@ -101,6 +109,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
+            android:textSize="18sp"
             />
     </LinearLayout>
     <LinearLayout
@@ -112,6 +121,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Loại : "
+            android:textSize="18sp"
             />
         <Spinner
             android:layout_width="match_parent"
@@ -126,6 +136,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Confirm" />
+        android:text="Confirm"
+        android:textSize="20sp"/>
 
 </LinearLayout>

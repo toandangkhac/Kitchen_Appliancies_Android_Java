@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".fragment.AdminProductFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <TextView
         android:id="@+id/tv_title_name"
@@ -13,12 +14,14 @@
         android:layout_height="wrap_content"
         android:text="DANH SÁCH SẢN PHẨM"
         android:textSize="30dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:layout_marginBottom="15dp"/>
 
     <Spinner
         android:id="@+id/spn_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:visibility="visible"
         />
 
@@ -28,12 +31,12 @@
         android:id="@+id/rv_product_category"
         android:layout_margin="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:visibility="visible"
     />
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="500dp"
+        android:layout_marginBottom="10dp"
         android:id="@+id/rv_category"
         android:layout_margin="10dp"
         android:visibility="gone"
@@ -70,7 +73,6 @@
             android:id="@+id/btn_change_item"
             android:visibility="visible"
             />
-
     </LinearLayout>
 
 

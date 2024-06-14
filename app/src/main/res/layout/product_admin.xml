@@ -2,7 +2,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/rounded_border"
+    android:layout_marginBottom="8dp"
+    >
     <ImageView
         android:layout_width="120dp"
         android:layout_height="120dp"

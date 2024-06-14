@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:text="DANH SÁCH TÀI KHOẢN"
         android:textSize="30dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:layout_margin="10dp"/>
 
     <Spinner
         android:id="@+id/spn_account"
